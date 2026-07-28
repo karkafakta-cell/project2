@@ -1,5 +1,5 @@
 // === KONEKSI DATABASE SUPABASE ===
-const URL_SUPABASE = "https://fxlshljhaejcwszdikvy.supabase.co/rest/v1/";
+const URL_SUPABASE = "https://fxlshljhaejcwszdikvy.supabase.co";
 const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4bHNobGpoYWVqY3dzemRpa3Z5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxOTA3MjEsImV4cCI6MjEwMDc2NjcyMX0.6mwiW4cyQ00UZYWCNLJOzpILVGMgn6FjvStB1JGowU4";
 
 const supabaseClient = supabase.createClient(URL_SUPABASE, ANON_KEY);
