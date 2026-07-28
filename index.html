@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>👾 NEON DISCORD SQUAD</title>
-    <!-- Hubungkan ke Library Supabase -->
+    <!-- LINK SUPABASE YANG SUDAH DIPERBAIKI (WAJIB INI BIAR WORK JIER) -->
     <script src="https://jsdelivr.net"></script>
     <!-- Hubungkan ke File CSS Terpisah -->
     <link rel="stylesheet" href="style.css">
@@ -30,20 +30,18 @@
             <h3 style="color:#45f3ff; margin-top:0;">✏️ Gabung Cyber Basecamp</h3>
             
             <div class="form-group">
-            <label>Nama Member:</label>
-                <!-- PASTIKAN ADA TULISAN oninput="cekKodeAdmin()" DI DALAM SINI -->
+                <label>Nama Member:</label>
                 <input type="text" id="input_nama" placeholder="Masukkan nama panggilan..." oninput="cekKodeAdmin()">
             </div>
-
             
             <div class="form-group">
                 <label>Jabatan:</label>
                 <select id="input_jabatan">
                     <option value="Member Biasa">Member Biasa</option>
-                    <option value="Sepuh Mabar">Sepuh Mabar</option>
+                    <option value="Sepuh Mabar">Sepuh Mabar\t</option>
                     <option value="Beban Team">Beban Team</option>
-                    <option value="Camat (Cadangan Mati)">Camat (Cadangan Mati)</option>
-                    <!-- Opsi admin ini kita sembunyikan secara bawaan menggunakan display:none -->
+                    <option value="Tumbal">Tumbal</option>
+                    <!-- Opsi admin rahasia -->
                     <option value="Ketua Squad / Admin" id="opsi-admin" style="display:none; color:#ff65a3;">👑 Ketua Squad / Admin</option>
                 </select>
             </div>
@@ -55,18 +53,16 @@
                     <option value="Wanita">Wanita</option>
                 </select>
             </div>
-            
-            <!-- Mengubah Role Game menjadi Pilihan Dropdown -->
-            <!-- Cari bagian input_role lama, lalu ganti dengan ini -->
+
+            <!-- Bagian Pilihan Dropdown Role -->
             <div class="form-group">
                 <label>Role Main Game:</label>
                 <select id="input_role">
                     <option value="Flexible (All Role)">Pilih game favoritmu terlebih dahulu...</option>
-                    </select>
+                </select>
             </div>
 
-
-            <!-- Mengubah Tampilan Game Favorit Menjadi Tag Neon Keren -->
+            <!-- Tampilan Game Favorit Tag Kapsul Modern -->
             <div class="form-group">
                 <label>Game Favorit (Klik untuk memilih, bisa lebih dari 1):</label>
                 <div class="tag-game-container">
@@ -74,7 +70,7 @@
                     <div class="tag-game" onclick="toggleTag(this, 'MLBB')">MLBB</div>
                     <div class="tag-game" onclick="toggleTag(this, 'PUBG Mobile')">PUBG Mobile</div>
                     <div class="tag-game" onclick="toggleTag(this, 'Genshin Impact')">Genshin Impact</div>
-                    <div class="tag-game" onclick="toggleTag(this, 'HSR')">Honkai: Star Rail</div >
+                    <div class="tag-game" onclick="toggleTag(this, 'HSR')">Honkai: Star Rail</div>
                     <div class="tag-game" onclick="toggleTag(this, 'Minecraft')">Minecraft</div>
                 </div>
             </div>
@@ -93,6 +89,7 @@
         </div>
     </div>
 
+    <!-- Hubungkan ke File JS Terpisah -->
     <script src="script.js"></script>
 </body>
 </html>
