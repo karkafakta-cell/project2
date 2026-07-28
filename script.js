@@ -1,236 +1,234 @@
-// === KONEKSI DATABASE SUPABASE ===
-const URL_SUPABASE = "https://fxlshljhaejcwszdikvy.supabase.co";
-const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4bHNobGpoYWVqY3dzemRpa3Z5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxOTA3MjEsImV4cCI6MjEwMDc2NjcyMX0.6mwiW4cyQ00UZYWCNLJOzpILVGMgn6FjvStB1JGowU4";
+// === KONEKSI DATABASE SUPABASE === 
+const URL_SUPABASE = "https://fxlshljhaejcwszdikvy.supabase.co"; 
+const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4bHNobGpoYWVqY3dzemRpa3Z5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxOTA3MjEsImV4cCI6MjEwMDc2NjcyMX0.6mwiW4cyQ00UZYWCNLJOzpILVGMgn6FjvStB1JGowU4"; 
+const supabaseClient = supabase.createClient(URL_SUPABASE, ANON_KEY); 
 
-const supabaseClient = supabase.createClient(URL_SUPABASE, ANON_KEY);
-
-let listMemberGlobal = [];
+let listMemberGlobal = []; 
 let gamesTerpilih = []; 
-let rolesTerpilih = []; // Tempat menampung banyak pilihan role mabar
+let rolesTerpilih = []; 
 
-// === KAMUS DATA ROLE BERDASARKAN GAME ===
-const KAMUS_ROLE = {
-    "Valorant": ["Duelist / Entry", "Sentinel / Anchor", "Initiator / Support", "Controller / Smoker"],
-    "MLBB": ["EXP Laner / Fighter", "Gold Laner / Marksman", "Mid Laner/ Mage", "Jungler / Assassin", "Roamer / Tank / Support"],
-    "Minecraft": ["PVP Fighter / Slayer", "Explorer / Gatherer", "Builder / Architect", "Redstoner / Engineer", "Farmer / Breeder", "Miner / Resource Collector"],
-    "PUBG Mobile": ["Rusher / Fragger", "Support / Medic", "IGL (Leader)", "Sniper / Scout"],
-};
+// === KAMUS DATA ROLE BERDASARKAN GAME === 
+const KAMUS_ROLE = { 
+    "Valorant": ["Duelist / Entry", "Sentinel / Anchor", "Initiator / Support", "Controller / Smoker"], 
+    "MLBB": ["EXP Laner / Fighter", "Gold Laner / Marksman", "Mid Laner/ Mage", "Jungler / Assassin", "Roamer / Tank / Support"], 
+    "Minecraft": ["PVP Fighter / Slayer", "Explorer / Gatherer", "Builder / Architect", "Redstoner / Engineer", "Farmer / Breeder", "Miner / Resource Collector"], 
+    "PUBG Mobile": ["Rusher / Fragger", "Support / Medic", "IGL (Leader)", "Sniper / Scout"], 
+}; 
 
-// FUNGSI UNTUK MERESET DAN MENYESUAIKAN OPSI ROLE SECARA KAPSUL SCROLL
-function perbaruiDaftarRole() {
-    let wadahRole = document.getElementById('tempat-tag-role');
-    let tombolAllRole = document.getElementById('btn-all-role');
-    if (!wadahRole) return;
+// FUNGSI NAVIGASI PINDAH TAB INTERAKTIF
+function pindahTab(idTabTujuan) {
+    document.querySelectorAll('.konten-tab').forEach(section => {
+        section.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-btn').forEach(tombol => {
+        tombol.classList.remove('active');
+    });
 
-    if (gamesTerpilih.length === 0) {
-        wadahRole.innerHTML = '<p style="color: #949ba4; margin: 5px 0; font-size: 13px;">Pilih game favoritmu terlebih dahulu...</p>';
+    document.getElementById(idTabTujuan).classList.add('active');
+    if (event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+    }
+}
+
+// FUNGSI UNTUK MERESET DAN MENYESUAIKAN OPSI ROLE SECARA KAPSUL SCROLL 
+function perbaruiDaftarRole() { 
+    let wadahRole = document.getElementById('tempat-tag-role'); 
+    let tombolAllRole = document.getElementById('btn-all-role'); 
+    if (!wadahRole) return; 
+
+    if (gamesTerpilih.length === 0) { 
+        wadahRole.innerHTML = '<p style="color: #949ba4; margin: 5px 0; font-size: 13px;">Pilih game favoritmu terlebih dahulu...</p>'; 
         rolesTerpilih = []; 
-        if (tombolAllRole) tombolAllRole.style.display = 'none'; // Sembunyikan tombol All Role jika game kosong
-        return;
-    }
+        if (tombolAllRole) tombolAllRole.style.display = 'none'; 
+        return; 
+    } 
 
-    // Munculkan tombol ALL ROLE jier jika ada game yang aktif dicentang
-    if (tombolAllRole) tombolAllRole.style.display = 'block';
+    // Munculkan tombol ALL ROLE secara otomatis jika ada game aktif yang dicentang
+    if (tombolAllRole) tombolAllRole.style.display = 'inline-block'; 
 
-    let semuaRoleCocok = [];
-    gamesTerpilih.forEach(game => {
-        if (KAMUS_ROLE[game]) {
-            semuaRoleCocok = semuaRoleCocok.concat(KAMUS_ROLE[game]);
-        }
-    });
+    let semuaRoleCocok = []; 
+    gamesTerpilih.forEach(game => { 
+        if (KAMUS_ROLE[game]) { 
+            semuaRoleCocok = semuaRoleCocok.concat(KAMUS_ROLE[game]); 
+        } 
+    }); 
+    let roleUnik = [...new Set(semuaRoleCocok)]; 
+    let htmlOpsi = ""; 
+    roleUnik.forEach(role => { 
+        let kelasAktif = rolesTerpilih.includes(role) ? "active" : ""; 
+        htmlOpsi += `<div class="tag-role ${kelasAktif}" data-role="${role}" onclick="toggleTagRole(this, '${role}')">${role}</div>`; 
+    }); 
+    wadahRole.innerHTML = htmlOpsi; 
+    rolesTerpilih = rolesTerpilih.filter(r => roleUnik.includes(r)); 
+} 
 
-    let roleUnik = [...new Set(semuaRoleCocok)];
+// Fungsi pendeteksi klik pada kapsul role manual 
+function toggleTagRole(elemen, namaRole) { 
+    elemen.classList.toggle('active'); 
+    if (elemen.classList.contains('active')) { 
+        rolesTerpilih.push(namaRole); 
+    } else { 
+        rolesTerpilih = rolesTerpilih.filter(r => r !== namaRole); 
+    } 
+} 
 
-    let htmlOpsi = "";
-    roleUnik.forEach(role => {
-        let kelasAktif = rolesTerpilih.includes(role) ? "active" : "";
-        // Kita tambah atribut data-role biar bisa dibaca tombol ALL ROLE
-        htmlOpsi += `<div class="tag-role ${kelasAktif}" data-role="${role}" onclick="toggleTagRole(this, '${role}')">${role}</div>`;
-    });
-
-    wadahRole.innerHTML = htmlOpsi;
-    rolesTerpilih = rolesTerpilih.filter(r => roleUnik.includes(r));
-}
-
-// Fungsi pendeteksi klik pada kapsul role manual
-function toggleTagRole(elemen, namaRole) {
-    elemen.classList.toggle('active');
-    if (elemen.classList.contains('active')) {
-        rolesTerpilih.push(namaRole);
-    } else {
-        rolesTerpilih = rolesTerpilih.filter(r => r !== namaRole);
-    }
-}
-
-// FUNGSI UNTUK SEKALI KLIK AKTIFKAN SEMUA ROLE SECARA INSTAN (IDE KAMU JIER!)
-function pilihSemuaRole() {
-    let tagRoles = document.querySelectorAll('.tag-role');
-    if (tagRoles.length === 0) return;
-
-    // Cek apakah jumlah yang terpilih masih kurang dari total kapsul yang ada
-    let paksaAktif = rolesTerpilih.length < tagRoles.length;
-
-    // Reset total wadah sementara
-    rolesTerpilih = [];
-
-    tagRoles.forEach(tag => {
-        let namaRole = tag.getAttribute('data-role');
-        if (paksaAktif) {
-            tag.classList.add('active');
-            rolesTerpilih.push(namaRole); // Masukkan semua nama role ke list database
-        } else {
-            tag.classList.remove('active'); // Matikan semua jika di-klik ulang pas posisi penuh
-        }
-    });
-}
+// FUNGSI UNTUK SEKALI KLIK AKTIFKAN SEMUA ROLE SECARA INSTAN
+function pilihSemuaRole() { 
+    let tagRoles = document.querySelectorAll('.tag-role'); 
+    if (tagRoles.length === 0) return; 
+    
+    let paksaAktif = rolesTerpilih.length < tagRoles.length; 
+    rolesTerpilih = []; 
+    
+    tagRoles.forEach(tag => { 
+        let namaRole = tag.getAttribute('data-role'); 
+        if (paksaAktif) { 
+            tag.classList.add('active'); 
+            rolesTerpilih.push(namaRole); 
+        } else { 
+            tag.classList.remove('active'); 
+        } 
+    }); 
+} 
 
 // FUNGSI UNTUK MERAKIT TEMPLATE BULATAN FOTO PROFIL
-function rakitHtmlFoto(squadData) {
-    let htmlFoto = "";
-    if(!squadData || squadData.length === 0) {
-        return "<p style='color:#aaa;'>Belum ada member. Silakan daftar di bawah!</p>";
-    }
-    squadData.forEach((member, indeks) => {
-        let fotoUrl = member.avatar_url || `https://dicebear.com/api/initials/${encodeURIComponent(member.nama_member)}.png`;
-        htmlFoto += `<img class="profil-bulat" src="${fotoUrl}" alt="${member.nama_member}" title="${member.nama_member}" onclick="bukaDetail(${indeks})">`;
-    });
-    return htmlFoto;
-}
+function rakitHtmlFoto(squadData) { 
+    let htmlFoto = ""; 
+    if(!squadData || squadData.length === 0) { 
+        return "<p style='color:#aaa;'>Belum ada member. Silakan daftar di menu Tambah Member!</p>"; 
+    } 
+    squadData.forEach((member, indeks) => { 
+        let fotoUrl = member.avatar_url;
+        if (!fotoUrl || fotoUrl.trim() === "" || fotoUrl.includes("pinterest.com/pin/")) {
+            fotoUrl = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${encodeURIComponent(member.nama_member)}`;
+        }
+        htmlFoto += `<img class="profil-bulat" src="${fotoUrl}" alt="${member.nama_member}" title="${member.nama_member}" onclick="bukaDetail(${indeks})">`; 
+    }); 
+    return htmlFoto; 
+} 
 
-// 1. FUNGSI UNTUK MENAMPILKAN BULATAN PROFIL (SUDAH DIOPTIMASI INSTAN)
-async function muatFotoSquad() {
-    const dataLokal = localStorage.getItem('cache_squad');
-    if (dataLokal) {
-        listMemberGlobal = JSON.parse(dataLokal);
-        document.getElementById('tempat-foto-squad').innerHTML = rakitHtmlFoto(listMemberGlobal);
-    }
+// FUNGSI UNTUK MENAMPILKAN BULATAN PROFIL 
+async function muatFotoSquad() { 
+    const dataLokal = localStorage.getItem('cache_squad'); 
+    if (dataLokal) { 
+        listMemberGlobal = JSON.parse(dataLokal); 
+        document.getElementById('tempat-foto-squad').innerHTML = rakitHtmlFoto(listMemberGlobal); 
+    } 
+    let { data: discord_squad, error } = await supabaseClient 
+        .from('discord_squad') 
+        .select('*'); 
+    if (error) { 
+        console.log("Gagal memuat latar belakang:", error); 
+        return; 
+    } 
+    localStorage.setItem('cache_squad', JSON.stringify(discord_squad)); 
+    listMemberGlobal = discord_squad; 
+    document.getElementById('tempat-foto-squad').innerHTML = rakitHtmlFoto(discord_squad); 
+} 
 
-    let { data: discord_squad, error } = await supabaseClient
-        .from('discord_squad')
-        .select('*');
-
-    if (error) {
-        console.log("Gagal memuat latar belakang:", error);
-        return;
-    }
-
-    localStorage.setItem('cache_squad', JSON.stringify(discord_squad));
-    listMemberGlobal = discord_squad;
-    document.getElementById('tempat-foto-squad').innerHTML = rakitHtmlFoto(discord_squad);
-}
-
-// 2. FUNGSI DETEKSI KODE RAHASIA ADMIN
-function cekKodeAdmin() {
-    let namaInput = document.getElementById('input_nama').value;
-    let opsiAdmin = document.getElementById('opsi-admin');
-    let selectJabatan = document.getElementById('input_jabatan');
-    
-    if (namaInput.toLowerCase().includes('owner')) {
+// FUNGSI DETEKSI KODE RAHASIA ADMIN 
+function cekKodeAdmin() { 
+    let namaInput = document.getElementById('input_nama').value; 
+    let opsiAdmin = document.getElementById('opsi-admin'); 
+    let selectJabatan = document.getElementById('input_jabatan'); 
+    if (namaInput.toLowerCase().includes('owner')) { 
         if(opsiAdmin) opsiAdmin.style.display = 'block'; 
         if(selectJabatan) selectJabatan.value = "Ketua Squad / Admin"; 
-        document.getElementById('input_nama').value = namaInput.replace(/owner/gi, '').trim();
+        document.getElementById('input_nama').value = namaInput.replace(/owner/gi, '').trim(); 
+    } 
+} 
+
+// FUNGSI KLIK UNTUK TOMBOL TAG GAME MODERN 
+function toggleTag(elemen, namaGame) { 
+    elemen.classList.toggle('active'); 
+    if (elemen.classList.contains('active')) { 
+        gamesTerpilih.push(namaGame); 
+    } else { 
+        gamesTerpilih = gamesTerpilih.filter(g => g !== namaGame); 
+    } 
+    perbaruiDaftarRole(); 
+} 
+
+// FUNGSI SAAT BULATAN DIKLIK (MUNCUL POP-UP DETAIL) 
+function bukaDetail(indeks) { 
+    let member = listMemberGlobal[indeks]; 
+    let tglGabung = new Date(member.created_at).toLocaleDateString('id-ID'); 
+    let fotoUrl = member.avatar_url;
+    if (!fotoUrl || fotoUrl.trim() === "" || fotoUrl.includes("pinterest.com/pin/")) {
+        fotoUrl = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${encodeURIComponent(member.nama_member)}`;
     }
-}
+    let htmlDetail = ` 
+        <img src="${fotoUrl}" style="width:85px; height:85px; border-radius:50%; border:2px solid #5865f2; display:block; margin:0 auto; object-fit:cover;"> 
+        <h2>${member.nama_member}</h2> 
+        <p style="color: #66fcf1; margin: 5px 0;">💼 <b>Jabatan:</b> ${member.jabatan || 'Member'}</p> 
+        <p style="color: #ff65a3; margin: 5px 0;">⚧️ <b>Gender:</b> ${member.gender || '-'}</p> 
+        <p style="color: #c5a3ff; margin: 5px 0;">🛡️ <b>Role:</b> ${member.role || '-'}</p> 
+        <p style="margin: 5px 0;">🎮 <b>Game Favorit:</b> ${member.game_favorit || '-'}</p> 
+        <p style="color: #c5a3c5; font-style: italic; margin: 10px 0;">📝 "${member.status_bio || ''}"</p> 
+        <p style="font-size:11px; color:#888; margin-top:20px; border-top:1px dashed #333; padding-top:5px;">📅 Bergabung: ${tglGabung}</p> 
+    `; 
+    document.getElementById('isi-detail-member').innerHTML = htmlDetail; 
+    document.getElementById('pop-up-detail').style.display = 'block'; 
+    document.getElementById('bg-pop-up').style.display = 'block'; 
+} 
 
-// 3. FUNGSI KLIK UNTUK TOMBOL TAG GAME MODERN
-function toggleTag(elemen, namaGame) {
-    elemen.classList.toggle('active');
-    if (elemen.classList.contains('active')) {
-        gamesTerpilih.push(namaGame);
-    } else {
-        gamesTerpilih = gamesTerpilih.filter(g => g !== namaGame);
-    }
-    perbaruiDaftarRole();
-}
+function tutupDetail() { 
+    document.getElementById('pop-up-detail').style.display = 'none'; 
+    document.getElementById('bg-pop-up').style.display = 'none'; 
+} 
 
-// 4. FUNGSI SAAT BULATAN DIKLIK (MUNCUL POP-UP DETAIL)
-function bukaDetail(indeks) {
-    let member = listMemberGlobal[indeks];
-    let tglGabung = new Date(member.created_at).toLocaleDateString('id-ID');
-    let fotoUrl = member.avatar_url || `https://dicebear.com/api/initials/${encodeURIComponent(member.nama_member)}.png`;
-
-    let htmlDetail = `
-        <img src="${fotoUrl}" style="width:85px; height:85px; border-radius:50%; border:2px solid #5865f2; display:block; margin:0 auto; object-fit:cover;">
-        <h2>${member.nama_member}</h2>
-        <p style="color: #66fcf1; margin: 5px 0;">💼 <b>Jabatan:</b> ${member.jabatan || 'Member'}</p>
-        <p style="color: #ff65a3; margin: 5px 0;">⚧️ <b>Gender:</b> ${member.gender || '-'}</p>
-        <p style="color: #c5a3ff; margin: 5px 0;">🛡️ <b>Role:</b> ${member.role || '-'}</p>
-        <p style="margin: 5px 0;">🎮 <b>Game Favorit:</b> ${member.game_favorit || '-'}</p>
-        <p style="color: #c5a3c5; font-style: italic; margin: 10px 0;">📝 "${member.status_bio || ''}"</p>
-        <p style="font-size:11px; color:#888; margin-top:20px; border-top:1px dashed #333; padding-top:5px;">📅 Bergabung: ${tglGabung}</p>
-    `;
-
-    document.getElementById('isi-detail-member').innerHTML = htmlDetail;
-    document.getElementById('pop-up-detail').style.display = 'block';
-    document.getElementById('bg-pop-up').style.display = 'block';
-}
-
-function tutupDetail() {
-    document.getElementById('pop-up-detail').style.display = 'none';
-    document.getElementById('bg-pop-up').style.display = 'none';
-}
-
-// 5. FUNGSI UNTUK MENGIRIM DATA FORMULIR KE SUPABASE
-async function kirimDataKeSupabase() {
-    let nama = document.getElementById('input_nama').value;
-    let jabatan = document.getElementById('input_jabatan').value;
-    let gender = document.getElementById('input_gender').value;
-    let bio = document.getElementById('input_bio').value;
-    let avatar = document.getElementById('input_avatar').value;
-
-    if(!nama) { alert("Nama wajib diisi ya!"); return; }
-
-    if (!bio || bio.trim() === "") {
-        const kumpulanBioAcak = [
-            "Pungut aku bwng😭",
-            "Lose streak mulu, tapi masih main💪",
-            "Spesialis tumbal sejati",
-            "Gendong tim sampe pinggang encok 🏋️",
-            "Mending mabar daripada overthinking😂",
-            "Fokus main drpd yapping🗣️",
-            "Tidur cuma teori, mnding push rank🖥️"
-        ];
-        bio = kumpulanBioAcak[Math.floor(Math.random() * kumpulanBioAcak.length)];
-    }
-
-    let stringGame = gamesTerpilih.join(", ");
-    if(stringGame === "") { stringGame = "Tidak ada game favorit"; }
-
-    // MENYATUKAN BANYAK KUMPULAN ROLE HASIL KLIK MENJADI SATU TEKS RAPID
-    let roleDicentang = rolesTerpilih.join(", ");
-    if(roleDicentang === "") { roleDicentang = "Flexible (All Role)"; }
-
-    let namaFinal = nama.trim();
-
-    const { data, error } = await supabaseClient
-        .from('discord_squad')
-        .insert([
-            { 
-                nama_member: namaFinal, 
-                jabatan: jabatan, 
-                gender: gender, 
-                role: roleDicentang, 
-                game_favorit: stringGame, 
-                status_bio: bio, 
-                avatar_url: avatar 
-            }
-        ]);
-
-    if (error) {
-        alert("Gagal daftar, RLS Supabase mungkin masih mengunci tabel!");
-        console.log(error);
-    } else {
-        alert("Berhasil bergabung ke basecamp! 🚀");
-        document.getElementById('input_nama').value = "";
-        document.getElementById('input_bio').value = "";
-        document.getElementById('input_avatar').value = "";
-        document.querySelectorAll('.tag-game.active').forEach(el => el.classList.remove('active'));
-        
-        gamesTerpilih = [];
-        rolesTerpilih = [];
-        perbaruiDaftarRole();
-        muatFotoSquad();
-    }
-}
+// FUNGSI UNTUK MENGIRIM DATA FORMULIR KE SUPABASE 
+async function kirimDataKeSupabase() { 
+    let nama = document.getElementById('input_nama').value; 
+    let jabatan = document.getElementById('input_jabatan').value; 
+    let gender = document.getElementById('input_gender').value; 
+    let bio = document.getElementById('input_bio').value; 
+    let avatar = document.getElementById('input_avatar').value; 
+    if(!nama) { 
+        alert("Nama wajib diisi ya!"); 
+        return; 
+    } 
+    if (!bio || bio.trim() === "") { 
+        const kumpulanBioAcak = [ 
+            "Pungut aku bwng😭", 
+            "Lose streak mulu, tapi masih main💪", 
+            "Spesialis tumbal sejati", 
+            "Gendong tim sampe pinggang encok 🏋️", 
+            "Mending mabar daripada overthinking😂", 
+            "Fokus main drpd yapping🗣️", 
+            "Tidur cuma teori, mnding push rank🖥️" 
+        ]; 
+        bio = kumpulanBioAcak[Math.floor(Math.random() * kumpulanBioAcak.length)]; 
+    } 
+    let stringGame = gamesTerpilih.join(", "); 
+    if(stringGame === "") { 
+        stringGame = "Tidak ada game favorit"; 
+    } 
+    let roleDicentang = rolesTerpilih.join(", "); 
+    if(roleDicentang === "") { 
+        roleDicentang = "Flexible (All Role)"; 
+    } 
+    let namaFinal = nama.trim(); 
+    const { data, error } = await supabaseClient 
+        .from('discord_squad') 
+        .insert([ 
+            { nama_member: namaFinal, jabatan: jabatan, gender: gender, role: roleDicentang, game_favorit: stringGame, status_bio: bio, avatar_url: avatar } 
+        ]); 
+    if (error) { 
+        alert("Gagal daftar, silakan cek konsol database!"); 
+        console.log(error); 
+    } else { 
+        alert("Berhasil bergabung ke basecamp! 🚀"); 
+        document.getElementById('input_nama').value = ""; 
+        document.getElementById('input_bio').value = ""; 
+        document.getElementById('input_avatar').value = ""; 
+        document.querySelectorAll('.tag-game.active').forEach(el => el.classList.remove('active')); 
+        gamesTerpilih = []; 
+        rolesTerpilih = []; 
+        perbaruiDaftarRole(); 
+        muatFotoSquad(); 
+        pindahTab('tab-home');
+    } 
+} 
 
 muatFotoSquad();
