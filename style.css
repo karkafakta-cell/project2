@@ -1,0 +1,134 @@
+body { 
+    font-family: 'Segoe UI', sans-serif; 
+    background-color: #0b0c10; 
+    color: #66fcf1; 
+    padding: 20px; 
+    text-align: center; 
+}
+h1 { 
+    text-shadow: 0 0 10px #66fcf1; 
+    margin-bottom: 5px; 
+}
+.subtitle { 
+    color: #c5a3ff; 
+    margin-bottom: 30px; 
+}
+.container { 
+    max-width: 800px; 
+    margin: 0 auto; 
+}
+
+/* Desain bulatan profil bulat */
+.flex-squad { 
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 20px; 
+    margin-bottom: 40px; 
+}
+.profil-bulat { 
+    width: 85px; 
+    height: 85px; 
+    border-radius: 50%; 
+    border: 3px solid #45f3ff; 
+    cursor: pointer; 
+    transition: 0.3s; 
+    object-fit: cover; 
+    box-shadow: 0 0 10px rgba(69,243,255,0.3); 
+}
+.profil-bulat:hover { 
+    transform: scale(1.15); 
+    border-color: #ff65a3; 
+    box-shadow: 0 0 15px rgba(255,101,163,0.6); 
+}
+
+/* Jendela Pop-up Detail (Modal) */
+.modal { 
+    display: none; 
+    position: fixed; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    background-color: #1f2833; 
+    border: 2px solid #45f3ff; 
+    border-radius: 15px; 
+    padding: 25px; 
+    z-index: 10; 
+    box-shadow: 0 0 30px rgba(69,243,255,0.5); 
+    width: 290px; 
+    text-align: left; 
+}
+.modal-bg { 
+    display: none; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0,0,0,0.7); 
+    z-index: 5; 
+}
+.modal h2 { 
+    margin-top: 10px; 
+    color: #fff; 
+    border-bottom: 1px solid #45f3ff; 
+    padding-bottom: 5px; 
+}
+.close-btn { 
+    float: right; 
+    cursor: pointer; 
+    color: #ff65a3; 
+    font-weight: bold; 
+    font-size: 22px; 
+}
+
+/* Formulir Pendaftaran */
+.form-box { 
+    background-color: #1f2833; 
+    border: 1px solid #333; 
+    padding: 20px; 
+    border-radius: 10px; 
+    text-align: left; 
+    margin-top: 20px; 
+}
+.form-group { 
+    margin-bottom: 15px; 
+}
+.form-group label { 
+    display: block; 
+    margin-bottom: 5px; 
+    color: #fff; 
+    font-weight: bold; 
+}
+.form-group input, .form-group select { 
+    width: 100%; 
+    padding: 8px; 
+    border-radius: 5px; 
+    border: 1px solid #45f3ff; 
+    background: #0b0c10; 
+    color: #fff; 
+    box-sizing: border-box; 
+}
+.checkbox-group { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 10px; 
+    color: #fff; 
+}
+.btn-kirim { 
+    background: #45f3ff; 
+    color: #0b0c10; 
+    border: none; 
+    padding: 10px 20px; 
+    font-weight: bold; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    width: 100%; 
+    font-size: 16px; 
+    transition: 0.3s; 
+}
+.btn-kirim:hover { 
+    background: #ff65a3; 
+    color: #fff; 
+    box-shadow: 0 0 10px #ff65a3; 
+}
