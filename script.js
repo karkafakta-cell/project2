@@ -147,7 +147,7 @@ function toggleTag(elemen, namaGame) {
 function bukaDetail(indeks) {
     let member = listMemberGlobal[indeks];
     let tglGabung = new Date(member.created_at).toLocaleDateString('id-ID');
-    let fotoUrl = member.avatar_url || 'https://dicebear.com' + encodeURIComponent(member.nama_member);
+    let fotoUrl = member.avatar_url || `https://dicebear.com/api/initials/${encodeURIComponent(member.nama_member)}.png`;
 
     let htmlDetail = `
         <img src="${fotoUrl}" style="width:85px; height:85px; border-radius:50%; border:2px solid #5865f2; display:block; margin:0 auto; object-fit:cover;">
