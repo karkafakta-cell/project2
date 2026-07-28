@@ -91,7 +91,7 @@ function rakitHtmlFoto(squadData) {
         return "<p style='color:#aaa;'>Belum ada member. Silakan daftar di bawah!</p>";
     }
     squadData.forEach((member, indeks) => {
-        let fotoUrl = member.avatar_url || `https://dicebear.com{encodeURIComponent(member.nama_member)}`;
+        let fotoUrl = member.avatar_url || `https://dicebear.com/api/initials/${encodeURIComponent(member.nama_member)}.png`;
         htmlFoto += `<img class="profil-bulat" src="${fotoUrl}" alt="${member.nama_member}" title="${member.nama_member}" onclick="bukaDetail(${indeks})">`;
     });
     return htmlFoto;
