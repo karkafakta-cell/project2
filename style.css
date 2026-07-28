@@ -1,17 +1,17 @@
 body { 
     font-family: 'Segoe UI', sans-serif; 
-    background-color: #494d64; /* Abu-abu keunguan medium (Lebih terang & adem) */
-    color: #cad3f5; /* Teks putih kebiruan lembut agar mata tidak silau */
+    background-color: #313338; /* Warna latar belakang utama asli Discord (Sangat adem) */
+    color: #dbdee1; /* Warna teks putih-abu lembut standar chat Discord */
     padding: 20px; 
     text-align: center; 
 }
 h1 { 
     color: #ffffff;
-    text-shadow: 0 0 10px #b7bdf8; /* Efek neon biru-ungu terang yang halus */
+    text-shadow: 0 0 10px #5865f2; /* Efek lampu neon warna Blurple (Biru-Ungu khas Discord) */
     margin-bottom: 5px; 
 }
 .subtitle { 
-    color: #b5bfe2; /* Sub-judul ungu pastel redup */
+    color: #949ba4; /* Warna abu-abu redup persis teks info di Discord */
     margin-bottom: 30px; 
 }
 .container { 
@@ -19,7 +19,7 @@ h1 {
     margin: 0 auto; 
 }
 
-/* Desain bulatan profil */
+/* Desain wadah bulatan profil */
 .flex-squad { 
     display: flex; 
     flex-wrap: wrap; 
@@ -31,31 +31,31 @@ h1 {
     width: 85px; 
     height: 85px; 
     border-radius: 50%; 
-    border: 3px solid #8ccd55; /* Lingkaran awal hijau bot mabar */
+    border: 3px solid #23a55a; /* Warna hijau indikator "Online" di Discord */
     cursor: pointer; 
     transition: 0.3s; 
     object-fit: cover; 
-    box-shadow: 0 0 10px rgba(140,205,85,0.3); 
+    box-shadow: 0 0 10px rgba(35,165,90,0.3); 
 }
 .profil-bulat:hover { 
     transform: scale(1.15); 
-    border-color: #b7bdf8; /* Berubah jadi biru-ungu Discord saat kursor menempel */
-    box-shadow: 0 0 15px rgba(183,189,248,0.7); 
+    border-color: #5865f2; /* Berubah jadi warna Blurple ikon Discord pas disentuh */
+    box-shadow: 0 0 15px rgba(88,101,242,0.6); 
 }
 
-/* Jendela Pop-up Detail (Modal) */
+/* Jendela Pop-up Detail Member (Modal) */
 .modal { 
     display: none; 
     position: fixed; 
     top: 50%; 
     left: 50%; 
     transform: translate(-50%, -50%); 
-    background-color: #363a4f; /* Kotak pop-up lebih gelap agar detail teks terbaca */
-    border: 2px solid #b7bdf8; 
+    background-color: #2b2d31; /* Warna pop-up profil Discord asli (Lebih gelap dari background) */
+    border: 2px solid #5865f2; 
     border-radius: 15px; 
     padding: 25px; 
     z-index: 10; 
-    box-shadow: 0 0 25px rgba(183,189,248,0.4); 
+    box-shadow: 0 0 25px rgba(88,101,242,0.4); 
     width: 290px; 
     text-align: left; 
 }
@@ -66,32 +66,32 @@ h1 {
     left: 0; 
     width: 100%; 
     height: 100%; 
-    background: rgba(0,0,0,0.55); 
+    background: rgba(0,0,0,0.65); /* Efek menggelapkan layar belakang */
     z-index: 5; 
 }
 .modal h2 { 
     margin-top: 10px; 
     color: #fff; 
-    border-bottom: 1px solid #b7bdf8; 
+    border-bottom: 1px solid #5865f2; 
     padding-bottom: 5px; 
 }
 .close-btn { 
     float: right; 
     cursor: pointer; 
-    color: #ee99a0; 
+    color: #f23f43; /* Warna merah tombol "Decline/Close" di Discord */
     font-weight: bold; 
     font-size: 22px; 
 }
 
-/* Formulir Pendaftaran */
+/* Formulir Pendaftaran (Gaya Card Discord) */
 .form-box { 
-    background-color: #363a4f; /* Warna kotak form abu-ungu pas */
-    border: 1px solid #24273a; 
+    background-color: #2b2d31; /* Warna kotak form abu-gelap khas channel Discord */
+    border: 1px solid #1e1f22; 
     padding: 20px; 
     border-radius: 10px; 
     text-align: left; 
     margin-top: 20px; 
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
 }
 .form-group { 
     margin-bottom: 15px; 
@@ -99,47 +99,51 @@ h1 {
 .form-group label { 
     display: block; 
     margin-bottom: 5px; 
-    color: #f4dbd6; 
+    color: #f2f3f5; 
     font-weight: bold; 
+    text-transform: uppercase; /* Bikin teks label huruf besar mini khas Discord */
+    font-size: 12px;
+    letter-spacing: 0.5px;
 }
 .form-group input, .form-group select { 
     width: 100%; 
     padding: 10px; 
-    border-radius: 5px; 
-    border: 1px solid #24273a; 
-    background: #24273a; /* Kotak isian dalam warna gelap berkelas */
+    border-radius: 4px; 
+    border: 1px solid #1e1f22; 
+    background: #1e1f22; /* Kotak isian hitam pekat mirip kolom chat Discord */
     color: #fff; 
     box-sizing: border-box; 
 }
 .form-group input:focus, .form-group select:focus {
     outline: none;
-    border-color: #b7bdf8; /* Menyala biru-ungu pas diklik mengetik */
+    border-color: #5865f2; /* Garis kotak menyala biru Discord pas kamu ngetik */
 }
 .checkbox-group { 
     display: grid; 
     grid-template-columns: 1fr 1fr; 
     gap: 10px; 
-    color: #cad3f5; 
+    color: #dbdee1; 
 }
+
+/* Tombol Kirim Biru Discord */
 .btn-kirim { 
-    background: #b7bdf8; /* Tombol warna biru-ungu adem */
-    color: #24273a; 
+    background: #5865f2; /* Warna tombol utama Blurple Discord */
+    color: #ffffff; 
     border: none; 
     padding: 12px 20px; 
     font-weight: bold; 
-    border-radius: 5px; 
+    border-radius: 4px; 
     cursor: pointer; 
     width: 100%; 
     font-size: 16px; 
-    transition: 0.3s; 
+    transition: 0.2s; 
 }
 .btn-kirim:hover { 
-    background: #c6a0f6; /* Berubah ungu pastel cantik saat hover */
-    color: #24273a;
-    box-shadow: 0 0 12px #c6a0f6; 
+    background: #4752c4; /* Warna biru berubah sedikit gelap pas ditindis kursor */
+    box-shadow: 0 0 12px rgba(88,101,242,0.5); 
 }
 
-/* Ruang gaya untuk Tag Game Modern */
+/* Desain Kapsul Tag Game Modern (Tema Discord) */
 .tag-game-container {
     display: flex;
     flex-wrap: wrap;
@@ -147,24 +151,23 @@ h1 {
     margin-top: 5px;
 }
 .tag-game {
-    background: #24273a;
-    border: 1px solid #b7bdf8;
-    color: #b5bfe2;
+    background: #1e1f22;
+    border: 1px solid #5865f2;
+    color: #949ba4;
     padding: 6px 14px;
     border-radius: 20px;
     cursor: pointer;
     font-size: 13px;
     font-weight: bold;
-    transition: 0.3s;
+    transition: 0.2s;
 }
 .tag-game:hover {
-    box-shadow: 0 0 8px rgba(183,189,248,0.5);
+    box-shadow: 0 0 8px rgba(88,101,242,0.4);
     color: #fff;
 }
-/* Gaya saat tombol game aktif terpilih */
 .tag-game.active {
-    background: #b7bdf8;
-    color: #24273a;
-    box-shadow: 0 0 12px #b7bdf8;
-    border-color: #b7bdf8;
+    background: #5865f2; /* Tag menyala biru jika dipilih */
+    color: #fff;
+    box-shadow: 0 0 10px #5865f2;
+    border-color: #5865f2;
 }
