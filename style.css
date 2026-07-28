@@ -171,3 +171,51 @@ h1 {
     box-shadow: 0 0 10px #5865f2;
     border-color: #5865f2;
 }
+
+/* Gaya Kotak Scroll Khusus untuk Pilihan Banyak Role */
+.scroll-role-box {
+    background: #1e1f22; /* Hitam pekat chat Discord */
+    border: 1px solid #1e1f22;
+    border-radius: 6px;
+    padding: 12px;
+    max-height: 140px; /* Batas tinggi kotak biar ga kepanjangan */
+    overflow-y: auto; /* Otomatis memunculkan scrollbar vertikal kalau role-nya kepenuhan */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    box-sizing: border-box;
+}
+
+/* Kapsul Tag Mini untuk Pilihan Role */
+.tag-role {
+    background: #2b2d31;
+    border: 1px solid #5865f2;
+    color: #b5bfe2;
+    padding: 5px 12px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+.tag-role:hover {
+    color: #fff;
+    box-shadow: 0 0 6px rgba(88,101,242,0.4);
+}
+.tag-role.active {
+    background: #5865f2;
+    color: #fff;
+    box-shadow: 0 0 8px #5865f2;
+}
+
+/* Mempercantik tampilan batang scrollbar biar mirip Discord asli */
+.scroll-role-box::-webkit-scrollbar {
+    width: 6px;
+}
+.scroll-role-box::-webkit-scrollbar-track {
+    background: #1e1f22;
+}
+.scroll-role-box::-webkit-scrollbar-thumb {
+    background: #2b2d31;
+    border-radius: 10px;
+}

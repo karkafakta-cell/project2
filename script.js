@@ -1,11 +1,12 @@
-// === KONEKSI DATABASE SUPABASE ===
-const URL_SUPABASE = "https://fxlshljhaejcwszdikvy.supabase.co/rest/v1/";
-const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4bHNobGpoYWVqY3dzemRpa3Z5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxOTA3MjEsImV4cCI6MjEwMDc2NjcyMX0.6mwiW4cyQ00UZYWCNLJOzpILVGMgn6FjvStB1JGowU4";
+// === KONEKSI DATABASE SUPABASE (SUDAH DIPERBAIKI) ===
+const URL_SUPABASE = "https://fxlshljhaejcwszdikvy.supabase.co"; // <-- Alamat utama yang bener, teks /rest/v1/ dihapus
+const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4bHNobGpoYWVqY3dzemRpa3Z5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxOTA3MjEsImV4cCI6MjEwMD72NjcyMX0.6mwiW4cyQ00UZYWCNLJOzpILVGMgn6FjvStB1JGowU4";
 
 const supabaseClient = supabase.createClient(URL_SUPABASE, ANON_KEY);
 
 let listMemberGlobal = [];
 let gamesTerpilih = []; 
+let rolesTerpilih = []; // Tempat menampung banyak pilihan role mabar (Ide kamu)
 
 // === KAMUS DATA ROLE BERDASARKAN GAME ===
 const KAMUS_ROLE = {
@@ -15,16 +16,19 @@ const KAMUS_ROLE = {
     "PUBG Mobile": ["Rusher / Fragger", "Support / Medic", "IGL (Leader)", "Sniper / Scout"],
 };
 
+// FUNGSI UNTUK MERESET DAN MENYESUAIKAN OPSI ROLE SECARA KAPSUL SCROLL (SUDAH DIPERBAIKI)
 function perbaruiDaftarRole() {
-    let selectRole = document.getElementById('input_role');
-    if (!selectRole) return;
+    let wadahRole = document.getElementById('tempat-tag-role');
+    if (!wadahRole) return;
 
+    // Jika tidak ada game yang dipilih
     if (gamesTerpilih.length === 0) {
-        selectRole.innerHTML = '<option value="Flexible (All Role)">Pilih game favoritmu terlebih dahulu...</option>';
+        wadahRole.innerHTML = '<p style="color: #949ba4; margin: 5px 0; font-size: 13px;">Pilih game favoritmu terlebih dahulu...</p>';
+        rolesTerpilih = []; 
         return;
     }
 
-    let semuaRoleCocok = ["Flexible (All Role)"];
+    let semuaRoleCocok = [];
     gamesTerpilih.forEach(game => {
         if (KAMUS_ROLE[game]) {
             semuaRoleCocok = semuaRoleCocok.concat(KAMUS_ROLE[game]);
@@ -33,11 +37,27 @@ function perbaruiDaftarRole() {
 
     let roleUnik = [...new Set(semuaRoleCocok)];
 
+    // Merakit tombol kapsul yang bisa diklik di dalam kotak scroll
     let htmlOpsi = "";
     roleUnik.forEach(role => {
-        htmlOpsi += `<option value="${role}">${role}</option>`;
+        let kelasAktif = rolesTerpilih.includes(role) ? "active" : "";
+        htmlOpsi += `<div class="tag-role ${kelasAktif}" onclick="toggleTagRole(this, '${role}')">${role}</div>`;
     });
-    selectRole.innerHTML = htmlOpsi;
+
+    wadahRole.innerHTML = htmlOpsi;
+    
+    // Saring ulang pilihan agar role dari game yang di-uncheck otomatis kehapus
+    rolesTerpilih = rolesTerpilih.filter(r => roleUnik.includes(r));
+}
+
+// Fungsi pendeteksi klik pada kapsul role (bisa milih banyak)
+function toggleTagRole(elemen, namaRole) {
+    elemen.classList.toggle('active');
+    if (elemen.classList.contains('active')) {
+        rolesTerpilih.push(namaRole);
+    } else {
+        rolesTerpilih = rolesTerpilih.filter(r => r !== namaRole);
+    }
 }
 
 // FUNGSI UNTUK MERAKIT TEMPLATE BULATAN FOTO PROFIL
@@ -55,15 +75,12 @@ function rakitHtmlFoto(squadData) {
 
 // 1. FUNGSI UNTUK MENAMPILKAN BULATAN PROFIL (SUDAH DIOPTIMASI INSTAN)
 async function muatFotoSquad() {
-    // TRIK INSTAN: Ambil data lama yang sempat disimpan di memori browser dulu
     const dataLokal = localStorage.getItem('cache_squad');
     if (dataLokal) {
         listMemberGlobal = JSON.parse(dataLokal);
-        // Langsung tampilkan ke layar dalam 0.1 detik tanpa nunggu loading internet!
         document.getElementById('tempat-foto-squad').innerHTML = rakitHtmlFoto(listMemberGlobal);
     }
 
-    // Ambil data terbaru secara diam-diam dari database Supabase di latar belakang
     let { data: discord_squad, error } = await supabaseClient
         .from('discord_squad')
         .select('*');
@@ -73,11 +90,8 @@ async function muatFotoSquad() {
         return;
     }
 
-    // Perbarui memori lokal dengan data paling baru
     localStorage.setItem('cache_squad', JSON.stringify(discord_squad));
     listMemberGlobal = discord_squad;
-    
-    // Perbarui tampilan layar jika ada member baru masuk
     document.getElementById('tempat-foto-squad').innerHTML = rakitHtmlFoto(discord_squad);
 }
 
@@ -132,12 +146,11 @@ function tutupDetail() {
     document.getElementById('bg-pop-up').style.display = 'none';
 }
 
-// 5. FUNGSI UNTUK MENGIRIM DATA FORMULIR KE SUPABASE
+// 5. FUNGSI UNTUK MENGIRIM DATA FORMULIR KE SUPABASE (SUDAH MENDUKUNG BANYAK ROLE)
 async function kirimDataKeSupabase() {
     let nama = document.getElementById('input_nama').value;
     let jabatan = document.getElementById('input_jabatan').value;
     let gender = document.getElementById('input_gender').value;
-    let role = document.getElementById('input_role').value;
     let bio = document.getElementById('input_bio').value;
     let avatar = document.getElementById('input_avatar').value;
 
@@ -159,6 +172,11 @@ async function kirimDataKeSupabase() {
     let stringGame = gamesTerpilih.join(", ");
     if(stringGame === "") { stringGame = "Tidak ada game favorit"; }
 
+    // MENYATUKAN BANYAK ROLE YANG DICENTANG MENJADI TEKS BERJARAK KOMA
+    let roleDicentang = rolesTerpilih.join(", ");
+    if(roleDicentang === "") { roleDicentang = "Flexible (All Role)"; }
+    let roleFinal = roleDicentang;
+
     let namaFinal = nama.trim();
 
     const { data, error } = await supabaseClient
@@ -168,7 +186,7 @@ async function kirimDataKeSupabase() {
                 nama_member: namaFinal, 
                 jabatan: jabatan, 
                 gender: gender, 
-                role: role, 
+                role: roleFinal, // Mengirim banyak kumpulan role sekaligus
                 game_favorit: stringGame, 
                 status_bio: bio, 
                 avatar_url: avatar 
@@ -184,7 +202,10 @@ async function kirimDataKeSupabase() {
         document.getElementById('input_bio').value = "";
         document.getElementById('input_avatar').value = "";
         document.querySelectorAll('.tag-game.active').forEach(el => el.classList.remove('active'));
+        
+        // Reset pilihan role kembali ke kosong semula
         gamesTerpilih = [];
+        rolesTerpilih = [];
         perbaruiDaftarRole();
         muatFotoSquad();
     }
