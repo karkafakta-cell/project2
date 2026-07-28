@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div class="container">
         <h1>👾 DISCORD SQUAD</h1>
         <p class="subtitle">Klik lingkaran foto profil untuk melihat database rahasia member.</p>
@@ -28,24 +27,21 @@
         <!-- Formulir Tambah Member -->
         <div class="form-box">
             <h3 style="color:#45f3ff; margin-top:0;">✏️ Gabung Cyber Basecamp</h3>
-            
             <div class="form-group">
                 <label>Nama Member:</label>
                 <input type="text" id="input_nama" placeholder="Masukkan nama panggilan..." oninput="cekKodeAdmin()">
             </div>
-            
             <div class="form-group">
                 <label>Jabatan:</label>
                 <select id="input_jabatan">
                     <option value="Member Biasa">Member Biasa</option>
-                    <option value="Sepuh Mabar">Sepuh Mabar\t</option>
+                    <option value="Sepuh Mabar">Sepuh Mabar</option>
                     <option value="Beban Team">Beban Team</option>
                     <option value="Tumbal">Tumbal</option>
                     <!-- Opsi admin rahasia -->
                     <option value="Ketua Squad / Admin" id="opsi-admin" style="display:none; color:#ff65a3;">👑 Ketua Squad / Admin</option>
                 </select>
             </div>
-            
             <div class="form-group">
                 <label>Gender:</label>
                 <select id="input_gender">
@@ -55,15 +51,12 @@
             </div>
 
             <!-- Bagian Pilihan Dropdown Role -->
-            <!-- CARI GRUP ROLE MAIN GAME LAMA, LALU GANTI DENGAN INI -->
             <div class="form-group">
                 <label>Role Main Game (Klik untuk memilih, bisa lebih dari 1):</label>
-                <!-- Kita ganti dropdown jadi wadah kotak yang bisa di-scroll -->
-            <div class="scroll-role-box" id="tempat-tag-role">
-                <p style="color: #949ba4; margin: 5px 0; font-size: 13px;">Pilih game favoritmu terlebih dahulu...</p>
+                <div class="scroll-role-box" id="tempat-tag-role">
+                    <p style="color: #949ba4; margin: 5px 0; font-size: 13px;">Pilih game favoritmu terlebih dahulu...</p>
+                </div>
             </div>
-            </div>
-
 
             <!-- Tampilan Game Favorit Tag Kapsul Modern -->
             <div class="form-group">
@@ -82,15 +75,19 @@
                 <label>Status / Bio Ringkas (Kosongkan jika ingin bio acak otomatis):</label>
                 <input type="text" id="input_bio" placeholder="Contoh: Kena comeback mulu...">
             </div>
-            
             <div class="form-group">
                 <label>Link Foto Profil (Opsional):</label>
                 <input type="text" id="input_avatar" placeholder="Tempel link foto dari Discord/Pinterest...">
             </div>
-
             <button class="btn-kirim" onclick="kirimDataKeSupabase()">Daftar Squad 🚀</button>
         </div>
-    </div>
+
+        <!-- TEMPAT WIDGET LIVE DISCORD (Sudah Dibungkus Rapi & Responsif) -->
+        <div style="margin-top: 30px; display: flex; justify-content: center;">
+            <iframe src="https://discord.com" width="100%" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts" style="max-width: 500px; border-radius: 8px; border: 1px solid #1e1f22;"></iframe>
+        </div>
+
+    </div> <!-- Penutup .container -->
 
     <!-- Hubungkan ke File JS Terpisah -->
     <script src="script.js"></script>
