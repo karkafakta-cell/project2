@@ -1,10 +1,12 @@
+require('dotenv').config();
+const TOKEN_BOT_DISCORD = process.env.DISCORD_TOKEN;
+
 const { Client, GatewayIntentBits } = require('discord.js');
 const { createClient } = require('@supabase/supabase-js'); // DIKOREKSI: Menggunakan package resmi
 
 // === CONFIG KONEKSI DATABASE & DISCORD ===
 const URL_SUPABASE = "https://fxlshljhaejcwszdikvy.supabase.co";
 const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4bHNobGpoYWVqY3dzemRpa3Z5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxOTA3MjEsImV4cCI6MjEwMDc2NjcyMX0.6mwiW4cyQ00UZYWCNLJOzpILVGMgn6FjvStB1JGowU4";
-const TOKEN_BOT_DISCORD = "MTUzMTg0MzMyOTMwODg4NTE3Mg.G6yDnc.iIVWbBcpTlmu3gaI-RdWoZSOD2N94vBc0AuN54"; 
 
 // Inisialisasi Supabase Client
 const supabase = createClient(URL_SUPABASE, ANON_KEY);
