@@ -45,9 +45,13 @@ async function cekHasilLoginDiscord() {
         document.getElementById("text-login-status").innerText = "Memverifikasi...";
 
         try {
-            const responUser = await fetch("https://discord.com", {
-                headers: { Authorization: `Bearer ${tokenAkses}` }
+            // Memanggil pelayan backend kita di Vercel, bukan Discord langsung!
+            const responUser = await fetch("/api/auth-discord", { 
+                headers: { 
+                Authorization: `Bearer ${tokenAkses}` 
+            } 
             });
+            
             const dataUser = await responUser.json();
 
             if (dataUser.id) {
