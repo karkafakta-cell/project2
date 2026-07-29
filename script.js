@@ -51,7 +51,7 @@ async function cekHasilLoginDiscord() {
                 Authorization: `Bearer ${tokenAkses}` 
             } 
             });
-            
+
             const dataUser = await responUser.json();
 
             if (dataUser.id) {
@@ -95,7 +95,7 @@ async function daftarkanViaWebOtomatis(user) {
         alert(`Sukses masuk! Selamat datang di Basecamp, ${user.username}!`);
         muatFotoSquad();
     } else {
-        console.error("Gagal simpan otomatis ke Supabase:", error);
+        console.error("Detail Error Supabase:", err.message || err);
     }
 }
 
