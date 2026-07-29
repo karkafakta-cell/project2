@@ -4,43 +4,130 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>👾 NEON DISCORD SQUAD</title>
-    <!-- LINK SUPABASE (Sudah diganti ke UNPKG agar anti-timeout & stabil) -->
-    <script src="https://unpkg.com"></script>
+    <!-- LINK SUPABASE (Menggunakan CDN Supabase JS resmi yang valid) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Hubungkan ke File CSS Terpisah -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>👾 DISCORD SQUAD</h1>
-        <p class="subtitle">Cyber Basecamp Kami: Database rahasia anak-anak Discord yang sering aktif mabar.</p>
 
-        <!-- ================= MENU NAVIGASI TAB UTAMA ================= -->
+    <!-- Latar Belakang Kotak Digital Grid Efek Cyberpunk -->
+    <div class="cyber-grid-overlay"></div>
+
+    <div class="container">
+        
+        <!-- ================= HERO / HOME HEADER REGION ================= -->
+        <header class="cyber-header">
+            <!-- Tombol Login Discord di Pojok Kanan Atas -->
+            <div class="auth-discord-container">
+                <button id="btn-discord-login" class="btn-dc-login" onclick="loginPakeDiscord()">
+                    <img src="https://website-files.com" alt="DC Logo" class="dc-mini-logo">
+                    <span id="text-login-status">Login via Discord</span>
+                </button>
+            </div>
+
+            <h1 class="cyber-title" data-text="DISCORD SQUAD">👾 DISCORD SQUAD</h1>
+            <p class="subtitle">Cyber Basecamp Kami</p>
+            <div class="neon-divider"></div>
+            <p class="cyber-desc">Database rahasia anak-anak Discord yang sering aktif mabar.</p>
+        </header>
+
+        <!-- ================= MENU NAVIGASI TAB UTAMA (Sudah Ringkas) ================= -->
         <nav class="nav-tabs">
             <button class="tab-btn active" onclick="pindahTab('tab-home')">🏠 Home</button>
-            <button class="tab-btn" onclick="pindahTab('tab-tambah')">✏️ Tambah Member</button>
-            <button class="tab-btn" onclick="pindahTab('tab-dokumentasi')">🎬 Dokumentasi Mabar</button>
+            <button class="tab-btn" onclick="pindahTab('tab-raport')">📊 Raport Mabar</button>
+            <button class="tab-btn" onclick="pindahTab('tab-tambah')">✏️ Gabung Squad</button>
         </nav>
 
-        <!-- ================= 1. HALAMAN TAB HOME (DAFTAR MEMBER) ================= -->
+        <!-- ================= 1. HALAMAN TAB HOME (DAFTAR MEMBER + DOKUMENTASI) ================= -->
         <section id="tab-home" class="konten-tab active">
-            <h3 style="color:#23a55a; margin-bottom: 20px;">👑 Member Cyber Aktif</h3>
-            <!-- Tempat Deretan Bulatan Foto Profil -->
+            <h3 class="section-title text-cyan">👑 Member Cyber Aktif</h3>
+            
+            <!-- Tempat Deretan Bulatan Foto Profil dengan Indikator Online/Offline -->
             <div class="flex-squad" id="tempat-foto-squad">Memanggil anak-anak dari database...</div>
             
-            <!-- TEMPAT WIDGET LIVE DISCORD (Sudah terpasang URL Widget resmi dengan ID Server-mu) -->
-            <div style="margin-top: 40px; display: flex; justify-content: center;">
-                <iframe src="https://discord.com" width="100%" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts" style="max-width: 500px; border-radius: 8px; border: 1px solid #1e1f22;"></iframe>
+            <!-- GABUNGAN: Dokumentasi Keseruan Mabar diletakkan di bawah Member -->
+            <h3 class="section-title text-pink" style="margin-top: 60px;">🎬 Dokumentasi Keseruan Mabar</h3>
+            <div class="dokumentasi-container">
+                <div class="card-dokumentasi">
+                    <h4>Malam Minggu Mabar Valorant</h4>
+                    <p>Moment pas kita kena comeback epic 12-14 di Map Ascent. Sakit bgt!</p>
+                </div>
+                <div class="card-dokumentasi">
+                    <h4>Clip Lucu: Salah Lempar Bomb</h4>
+                    <p>Clip kocak si Budi salah pencet tombol ulti pas lagi defuse spike wkwk.</p>
+                </div>
+            </div>
+
+            <!-- TEMPAT WIDGET LIVE DISCORD -->
+            <div class="discord-widget-wrapper" style="margin-top: 60px;">
+                <iframe src="https://discord.com" width="100%" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
             </div>
         </section>
 
-        <!-- ================= 2. HALAMAN TAB TAMBAH MEMBER (FORMULIR) ================= -->
+        <!-- ================= 2. HALAMAN TAB RAPORT MABAR (SISTEM VS VOTE) ================= -->
+        <section id="tab-raport" class="konten-tab">
+            <h3 class="section-title text-cyan">📊 Raport Komunitas Squad</h3>
+            <p class="subtitle" style="text-align: center; color: #949ba4;">Perbandingan Data Valid Sistem vs Hasil Fitnah (Vote) Member</p>
+            
+            <div class="raport-grid-container">
+                <!-- Tabel Pemantauan Otomatis dari Bot -->
+                <div class="raport-card system-data">
+                    <h4 class="neon-text-blue">🛡️ Berdasarkan Data Sistem (Anti-Hoax)</h4>
+                    <div class="table-responsive">
+                        <table class="cyber-table">
+                            <thead>
+                                <tr>
+                                    <th>Nama Member</th>
+                                    <th>🗣️ Yapping</th>
+                                    <th>🎙️ VC aktif</th>
+                                    <th>💤 AFK</th>
+                                </tr>
+                            </thead>
+                            <tbody id="data-sistem-loop">
+                                <tr>
+                                    <td colspan="4" style="text-align:center; color:#949ba4;">Menghubungkan ke satelit bot...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tabel Hasil Vote Komunitas -->
+                <div class="raport-card vote-data">
+                    <h4 class="neon-text-pink">🗳️ Hasil Tindakan Fitnah (Vote Member)</h4>
+                    <div class="table-responsive">
+                        <table class="cyber-table">
+                            <thead>
+                                <tr>
+                                    <th>Nama Member</th>
+                                    <th>👑 Sepuh</th>
+                                    <th>☠️ Beban</th>
+                                    <th>🎯 Tumbal</th>
+                                    <th>Aksi Vote</th>
+                                </tr>
+                            </thead>
+                            <tbody id="data-vote-loop">
+                                <tr>
+                                    <td colspan="5" style="text-align:center; color:#949ba4;">Mengambil kotak suara...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 3. HALAMAN TAB TAMBAH MEMBER (FORMULIR) ================= -->
         <section id="tab-tambah" class="konten-tab">
             <div class="form-box">
-                <h3 style="color:#45f3ff; margin-top:0; margin-bottom: 20px;">✏️ Gabung Cyber Basecamp</h3>
+                <h3 class="section-title text-pink">✏️ Gabung Cyber Basecamp</h3>
+                
                 <div class="form-group">
                     <label>Nama Member:</label>
                     <input type="text" id="input_nama" placeholder="Masukkan nama panggilan..." oninput="cekKodeAdmin()">
                 </div>
+                
                 <div class="form-group">
                     <label>Jabatan:</label>
                     <select id="input_jabatan">
@@ -52,6 +139,7 @@
                         <option value="Ketua Squad / Admin" id="opsi-admin" style="display:none; color:#ff65a3;">👑 Ketua Squad / Admin</option>
                     </select>
                 </div>
+                
                 <div class="form-group">
                     <label>Gender:</label>
                     <select id="input_gender">
@@ -59,14 +147,15 @@
                         <option value="Wanita">Wanita</option>
                     </select>
                 </div>
+                
                 <div class="form-group">
                     <label>Role Main Game (Klik untuk memilih, bisa lebih dari 1):</label>
-                    <!-- Tombol All Role instan pintar -->
                     <button type="button" id="btn-all-role" class="btn-all-role" onclick="pilihSemuaRole()">🔥 Pilih Semua (All Role)</button>
                     <div class="scroll-role-box" id="tempat-tag-role">
                         <p style="color: #949ba4; margin: 5px 0; font-size: 13px;">Pilih game favoritmu terlebih dahulu...</p>
                     </div>
                 </div>
+                
                 <div class="form-group">
                     <label>Game Favorit (Klik untuk memilih, bisa lebih dari 1):</label>
                     <div class="tag-game-container">
@@ -78,30 +167,18 @@
                         <div class="tag-game" onclick="toggleTag(this, 'Minecraft')">Minecraft</div>
                     </div>
                 </div>
+                
                 <div class="form-group">
                     <label>Status / Bio Ringkas (Kosongkan jika ingin bio acak otomatis):</label>
                     <input type="text" id="input_bio" placeholder="Contoh: Kena comeback mulu...">
                 </div>
+                
                 <div class="form-group">
                     <label>Link Foto Profil (Opsional):</label>
                     <input type="text" id="input_avatar" placeholder="Tempel link foto dari Discord/Pinterest...">
                 </div>
+                
                 <button class="btn-kirim" onclick="kirimDataKeSupabase()">Daftar Squad 🚀</button>
-            </div>
-        </section>
-
-        <!-- ================= 3. HALAMAN TAB DOKUMENTASI MABAR ================= -->
-        <section id="tab-dokumentasi" class="konten-tab">
-            <h3 style="color:#ff65a3; margin-bottom: 20px;">🎬 Dokumentasi Keseruan Mabar</h3>
-            <div class="dokumentasi-container">
-                <div class="card-dokumentasi">
-                    <h4>Malam Minggu Mabar Valorant</h4>
-                    <p>Moment pas kita kena comeback epic 12-14 di Map Ascent. Sakit bgt!</p>
-                </div>
-                <div class="card-dokumentasi">
-                    <h4>Clip Lucu: Salah Lempar Bomb</h4>
-                    <p>Clip kocak si Budi salah pencet tombol ulti pas lagi defuse spike wkwk.</p>
-                </div>
             </div>
         </section>
 

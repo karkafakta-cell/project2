@@ -1,144 +1,150 @@
+/* ========================================================
+   GAYA BAWAAN UTAMA & RESET TEMA ASLI DISCORD (Sangat Adem)
+   ======================================================== */
 body { 
     font-family: 'Segoe UI', sans-serif; 
-    background-color: #313338; /* Warna latar belakang utama asli Discord (Sangat adem) */ 
+    background-color: #313338; /* Warna latar belakang utama asli Discord */ 
     color: #dbdee1; /* Warna teks putih-abu lembut standar chat Discord */ 
     padding: 20px; 
     text-align: center; 
-} 
+    position: relative;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* Latar Belakang Kotak Digital Grid Khas Cyber-Discord */
+.cyber-grid-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: 
+        linear-gradient(rgba(88, 101, 242, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(88, 101, 242, 0.02) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.container { 
+    max-width: 1000px; 
+    margin: 0 auto; 
+    position: relative;
+    z-index: 1;
+}
+
+/* Header & Tombol Login Discord */
+.cyber-header {
+    text-align: center;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.auth-discord-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+}
+
+.btn-dc-login {
+    background-color: #5865f2;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-dc-login:hover {
+    background-color: #4752c4;
+    box-shadow: 0 0 12px rgba(88, 101, 242, 0.5);
+}
+
+.dc-mini-logo {
+    height: 16px;
+}
 
 h1 { 
     color: #ffffff; 
-    text-shadow: 0 0 10px #5865f2; /* Efek lampu neon warna Blurple (Biru-Ungu khas Discord) */ 
+    text-shadow: 0 0 10px #5865f2; /* Efek neon Blurple */ 
     margin-bottom: 5px; 
 } 
 
 .subtitle { 
-    color: #949ba4; /* Warna abu-abu redup persis teks info di Discord */ 
-    margin-bottom: 30px; 
+    color: #949ba4; /* Warna abu-abu redup info Discord */ 
+    margin-bottom: 15px; 
 } 
 
-.container { 
-    max-width: 800px; 
-    margin: 0 auto; 
-} 
+.neon-divider {
+    height: 3px;
+    width: 100px;
+    background: linear-gradient(90deg, #5865f2, #45f3ff);
+    margin: 15px auto;
+    box-shadow: 0 0 8px #5865f2;
+}
+
+.cyber-desc {
+    color: #b5bfe2;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
 
 /* ========================================================
    GAYA MENU TAB NAVIGASI MODERN (TEMA DISCORD)
    ======================================================== */
-.nav-tabs {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
-}
+.nav-tabs { 
+    display: flex; 
+    justify-content: center; 
+    gap: 12px; 
+    margin-bottom: 30px; 
+    flex-wrap: wrap; 
+} 
 
-.tab-btn {
+.tab-btn { 
     background-color: #2b2d31; 
-    color: #949ba4;
-    border: 1px solid #1e1f22;
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: bold;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
+    color: #949ba4; 
+    border: 1px solid #1e1f22; 
+    padding: 10px 20px; 
+    font-size: 14px; 
+    font-weight: bold; 
+    border-radius: 20px; 
+    cursor: pointer; 
+    transition: all 0.2s ease; 
+} 
 
-.tab-btn:hover {
-    color: #fff;
-    background-color: #35373c;
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
-}
+.tab-btn:hover { 
+    color: #fff; 
+    background-color: #35373c; 
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.1); 
+} 
 
-.tab-btn.active {
-    background-color: #5865f2; /* Menyala warna Blurple Discord */
-    color: #ffffff;
-    border-color: #5865f2;
-    box-shadow: 0 0 12px rgba(88, 101, 242, 0.5);
-}
+.tab-btn.active { 
+    background-color: #5865f2; /* Menyala Blurple */ 
+    color: #ffffff; 
+    border-color: #5865f2; 
+    box-shadow: 0 0 12px rgba(88, 101, 242, 0.5); 
+} 
 
-/* Mengatur mekanik sembunyi-muncul section tab */
-.konten-tab {
+.konten-tab { 
     display: none; 
-    animation: transisiLembut 0.3s ease-in-out;
-}
+    animation: transisiLembut 0.3s ease-in-out; 
+} 
 
-.konten-tab.active {
+.konten-tab.active { 
     display: block; 
-}
+} 
 
-@keyframes transisiLembut {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* ========================================================
-   GAYA KARTU GRID DOKUMENTASI MABAR (TEMA EMBED)
-   ======================================================== */
-.dokumentasi-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr; 
-    gap: 20px;
-    text-align: left;
-    margin-top: 10px;
-}
-
-.card-dokumentasi {
-    background-color: #2b2d31;
-    border-left: 4px solid #5865f2; 
-    border-radius: 4px 8px 8px 4px;
-    padding: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    transition: 0.2s;
-}
-
-.card-dokumentasi:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-}
-
-.card-dokumentasi h4 {
-    margin: 0 0 8px 0;
-    color: #fff;
-    font-size: 16px;
-}
-
-.card-dokumentasi p {
-    margin: 0;
-    color: #b5bfe2;
-    font-size: 13px;
-    line-height: 1.5;
-}
-
-/* Tombol Pilih Semua Role */
-.btn-all-role {
-    background: #1e1f22;
-    color: #45f3ff; /* Warna neon cyan biar kontras */
-    border: 1px dashed #45f3ff;
-    padding: 6px 12px;
-    font-size: 11px;
-    font-weight: bold;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-bottom: 8px;
-    display: none; /* Muncul via JS jika game dipilih */
-    transition: 0.2s;
-}
-
-.btn-all-role:hover {
-    background: rgba(69, 243, 255, 0.1);
-    box-shadow: 0 0 8px rgba(69, 243, 255, 0.3);
-}
-
-@media (max-width: 600px) {
-    .dokumentasi-container {
-        grid-template-columns: 1fr;
-    }
+@keyframes transisiLembut { 
+    from { opacity: 0; transform: translateY(10px); } 
+    to { opacity: 1; transform: translateY(0); } 
 }
 
 /* ========================================================
-   GAYA BAWAAN UTAMA
+   GAYA INDIKATOR ONLINE/OFFLINE DI HALAMAN UTAMA (HOME)
    ======================================================== */
 .flex-squad { 
     display: flex; 
@@ -146,67 +152,189 @@ h1 {
     justify-content: center; 
     gap: 20px; 
     margin-bottom: 40px; 
-} 
+}
 
-.profil-bulat { 
-    width: 85px; 
-    height: 85px; 
-    border-radius: 50%; 
-    border: 3px solid #23a55a; 
-    cursor: pointer; 
-    transition: 0.3s; 
-    object-fit: cover; 
-    box-shadow: 0 0 10px rgba(35,165,90,0.3); 
-} 
+/* Container utama untuk mendata bulatan profil */
+.member-avatar-wrapper {
+    position: relative;
+    width: 85px;
+    height: 85px;
+    cursor: pointer;
+    transition: 0.3s;
+}
 
-.profil-bulat:hover { 
-    transform: scale(1.15); 
-    border-color: #5865f2; 
-    box-shadow: 0 0 15px rgba(88,101,242,0.6); 
-} 
+.member-avatar-wrapper:hover {
+    transform: scale(1.15);
+}
 
-.modal { 
-    display: none; 
-    position: fixed; 
-    top: 50%; 
-    left: 50%; 
-    transform: translate(-50%, -50%); 
-    background-color: #2b2d31; 
-    border: 2px solid #5865f2; 
-    border-radius: 15px; 
-    padding: 25px; 
-    z-index: 10; 
-    box-shadow: 0 0 25px rgba(88,101,242,0.4); 
-    width: 290px; 
+.member-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #2b2d31;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* Set dasar bulatan status di pojok kanan bawah foto */
+.member-avatar-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 3px solid #313338; /* Memotong foto seperti di Discord */
+}
+
+/* Kondisi Hijau untuk Online, Abu-abu untuk Offline */
+.member-avatar-wrapper.status-online::after {
+    background-color: #23a55a;
+    box-shadow: 0 0 8px #23a55a;
+}
+
+.member-avatar-wrapper.status-offline::after {
+    background-color: #747f8d;
+}
+
+/* Penyegar tampilan widget live */
+.discord-widget-wrapper {
+    display: flex;
+    justify-content: center;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* ========================================================
+   GAYA KARTU GRID DOKUMENTASI MABAR (TEMA EMBED)
+   ======================================================== */
+.section-title {
+    font-size: 18px;
+    margin-bottom: 20px;
+    text-align: left;
+    border-bottom: 1px solid #3f4147;
+    padding-bottom: 8px;
+}
+
+.text-cyan { color: #45f3ff; text-shadow: 0 0 5px rgba(69, 243, 255, 0.4); }
+.text-pink { color: #ff65a3; text-shadow: 0 0 5px rgba(255, 101, 163, 0.4); }
+
+.dokumentasi-container { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 20px; 
     text-align: left; 
-} 
-
-.modal-bg { 
-    display: none; 
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%; 
-    background: rgba(0,0,0,0.65); 
-    z-index: 5; 
-} 
-
-.modal h2 { 
     margin-top: 10px; 
+    margin-bottom: 40px;
+} 
+
+.card-dokumentasi { 
+    background-color: #2b2d31; 
+    border-left: 4px solid #5865f2; 
+    border-radius: 4px 8px 8px 4px; 
+    padding: 15px; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
+    transition: 0.2s; 
+} 
+
+.card-dokumentasi:hover { 
+    transform: translateY(-3px); 
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3); 
+    border-left-color: #45f3ff;
+} 
+
+.card-dokumentasi h4 { 
+    margin: 0 0 8px 0; 
     color: #fff; 
-    border-bottom: 1px solid #5865f2; 
-    padding-bottom: 5px; 
+    font-size: 16px; 
 } 
 
-.close-btn { 
-    float: right; 
-    cursor: pointer; 
-    color: #f23f43; 
-    font-weight: bold; 
-    font-size: 22px; 
-} 
+.card-dokumentasi p { 
+    margin: 0; 
+    color: #b5bfe2; 
+    font-size: 13px; 
+    line-height: 1.5; 
+}
 
+/* ========================================================
+   GAYA TAB RAPORT MABAR (GRID TABEL BERDAMPINGAN TEMA EMBED)
+   ======================================================== */
+.raport-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 25px;
+    margin-top: 10px;
+    text-align: left;
+}
+
+.raport-card {
+    background-color: #2b2d31;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    border-top: 4px solid #5865f2;
+}
+
+.raport-card.system-data { border-top-color: #45f3ff; }
+.raport-card.vote-data { border-top-color: #ff65a3; }
+
+.raport-card h4 {
+    margin-bottom: 15px;
+    font-size: 15px;
+    color: #fff;
+}
+
+.neon-text-blue { color: #45f3ff; }
+.neon-text-pink { color: #ff65a3; }
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.cyber-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.cyber-table th, .cyber-table td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #1e1f22;
+    font-size: 13px;
+}
+
+.cyber-table th {
+    color: #949ba4;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 11px;
+}
+
+.cyber-table td {
+    color: #dbdee1;
+}
+
+.btn-mini-vote {
+    background: #1e1f22;
+    border: 1px solid #ff65a3;
+    color: #ff65a3;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 11px;
+    transition: 0.2s;
+}
+
+.btn-mini-vote:hover {
+    background-color: #ff65a3;
+    color: #fff;
+    box-shadow: 0 0 8px #ff65a3;
+}
+
+/* ========================================================
+   GAYA TAB FORM BOX (GABUNG SQUAD)
+   ======================================================== */
 .form-box { 
     background-color: #2b2d31; 
     border: 1px solid #1e1f22; 
@@ -244,37 +372,26 @@ h1 {
 .form-group input:focus, .form-group select:focus { 
     outline: none; 
     border-color: #5865f2; 
-} 
+}
 
-.tag-game-container { 
-    display: flex; 
-    flex-wrap: wrap; 
-    gap: 10px; 
-    margin-top: 5px; 
-} 
-
-.tag-game { 
+/* Tombol Pilih Semua Role */
+.btn-all-role { 
     background: #1e1f22; 
-    border: 1px solid #5865f2; 
-    color: #949ba4; 
-    padding: 6px 14px; 
-    border-radius: 20px; 
-    cursor: pointer; 
-    font-size: 13px; 
+    color: #45f3ff; 
+    border: 1px dashed #45f3ff; 
+    padding: 6px 12px; 
+    font-size: 11px; 
     font-weight: bold; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    margin-bottom: 8px; 
+    display: none; 
     transition: 0.2s; 
 } 
 
-.tag-game:hover { 
-    box-shadow: 0 0 8px rgba(88,101,242,0.4); 
-    color: #fff; 
-} 
-
-.tag-game.active { 
-    background: #5865f2; 
-    color: #fff; 
-    box-shadow: 0 0 10px #5865f2; 
-    border-color: #5865f2; 
+.btn-all-role:hover { 
+    background: rgba(69, 243, 255, 0.1); 
+    box-shadow: 0 0 8px rgba(69, 243, 255, 0.3); 
 } 
 
 .scroll-role-box { 
@@ -304,7 +421,7 @@ h1 {
 
 .tag-role:hover { 
     color: #fff; 
-    box-shadow: 0 0 6px rgba(88,101,242,0.4); 
+    box-shadow: 0 0 6px rgba(88, 101, 242, 0.4); 
 } 
 
 .tag-role.active { 
@@ -313,15 +430,110 @@ h1 {
     box-shadow: 0 0 8px #5865f2; 
 } 
 
-.scroll-role-box::-webkit-scrollbar { 
-    width: 6px; 
+.scroll-role-box::-webkit-scrollbar { width: 6px; } 
+.scroll-role-box::-webkit-scrollbar-track { background: #1e1f22; } 
+.scroll-role-box::-webkit-scrollbar-thumb { background: #2b2d31; border-radius: 10px; }
+
+.tag-game-container { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 10px; 
+    margin-top: 5px; 
 } 
 
-.scroll-role-box::-webkit-scrollbar-track { 
+.tag-game { 
     background: #1e1f22; 
-} 
+    border: 1px solid #5865f2; 
+    color: #949ba4; 
+    padding: 6px 14px; 
+      border-radius: 20px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  transition: 0.2s;
+}
 
-.scroll-role-box::-webkit-scrollbar-thumb { 
-    background: #2b2d31; 
-    border-radius: 10px; 
+.tag-game:hover {
+  box-shadow: 0 0 8px rgba(88, 101, 242, 0.4);
+  color: #fff;
+}
+
+.tag-game.active {
+  background: #5865f2;
+  color: #fff;
+  box-shadow: 0 0 10px #5865f2;
+  border-color: #5865f2;
+}
+
+.btn-kirim {
+  width: 100%;
+  background-color: #23a55a;
+  border: none;
+  color: #fff;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s;
+}
+
+.btn-kirim:hover {
+  background-color: #1a7f43;
+  box-shadow: 0 0 12px rgba(35, 165, 90, 0.5);
+}
+
+/* ========================================================
+GAYA BAWAAN UTAMA ELEMEN POP-UP MODAL DETAIL MEMBER
+======================================================== */
+.modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #2b2d31;
+  border: 2px solid #5865f2;
+  border-radius: 15px;
+  padding: 25px;
+  z-index: 10;
+  box-shadow: 0 0 25px rgba(88, 101, 242, 0.4);
+  width: 290px;
+  text-align: left;
+}
+
+.modal-bg {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 5;
+}
+
+.modal h2 {
+  margin-top: 10px;
+  color: #fff;
+  border-bottom: 1px solid #5865f2;
+  padding-bottom: 5px;
+}
+
+.close-btn {
+  float: right;
+  cursor: pointer;
+  color: #f23f43;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+/* Responsive breakpoint */
+@media (max-width: 650px) {
+  .dokumentasi-container,
+  .raport-grid-container {
+    grid-template-columns: 1fr;
+  }
 }
