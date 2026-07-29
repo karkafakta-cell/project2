@@ -65,8 +65,11 @@ body {
 }
 
 .dc-mini-logo {
-    height: 16px;
+    height: 18px;       /* Mengatur tinggi logo agar pas dengan teks */
+    width: auto;
+    object-fit: contain;
 }
+
 
 h1 { 
     color: #ffffff; 
