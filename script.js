@@ -245,7 +245,7 @@ function rakitHtmlFoto(squadData) {
         // Merakit wrapper avatar dengan sistem bulatan status memotong foto ala Discord asli
         htmlFoto += `
             <div class="member-avatar-wrapper ${statusClass} " onclick="bukaDetail(${indeks})">
-                <img class="member-img" src="${fotoUrl}" alt="${member.nama_member}" title="${member.nama_member}">
+                <img class="member-img" src="${fotoUrl}" referrerpolicy="no-referrer" alt="${member.nama_member}" title="${member.nama_member}">
             </div>
         `;
     });
@@ -296,7 +296,7 @@ function bukaDetail(indeks) {
   const isOnline = member.discord_id && dataDiscordOnline.includes(member.discord_id);
   
   let htmlDetail = `
-    <img src="${fotoUrl}" style="width:85px; height:85px; border-radius:50%; border:2px solid #5865f2; display:block; margin:0 auto; object-fit:cover;"> 
+    <img src="${fotoUrl}" referrerpolicy="no-referrer" style="width:85px; height:85px; border-radius:50%; border:2px solid #5865f2; display:block; margin:0 auto; object-fit:cover;"> 
     <h2>${member.nama_member}</h2> 
     <p style="color: #23a55a; text-align:center; font-weight:bold; margin: 5px 0;">Status: ${isOnline ? '🟢 Online' : '⚫ Offline'}</p> 
     <p style="color: #66fcf1; margin: 5px 0;">💼 <b>Jabatan:</b> ${member.jabatan || 'Member'}</p> 
