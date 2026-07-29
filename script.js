@@ -57,7 +57,7 @@ async function cekHasilLoginDiscord() {
             if (dataUser.id) {
                 await daftarkanViaWebOtomatis(dataUser);
             }
-        } catch (err) {
+        } catch (error) {
             console.error("Gagal verifikasi OAuth Discord:", err);
             document.getElementById("text-login-status").innerText = "Login Gagal";
         }
@@ -66,7 +66,7 @@ async function cekHasilLoginDiscord() {
 
 async function daftarkanViaWebOtomatis(user) {
     const linkAvatar = user.avatar 
-        ? `https://discordapp.com{user.id}/${user.avatar}.png`
+        ? `https://discordapp.com${user.id}/${user.avatar}.png`
         : `https://api.dicebear.com/7.x/pixel-art/svg?seed=${encodeURIComponent(user.username)}`;
 
     const kumpulanBioAcak = [
@@ -95,7 +95,7 @@ async function daftarkanViaWebOtomatis(user) {
         alert(`Sukses masuk! Selamat datang di Basecamp, ${user.username}!`);
         muatFotoSquad();
     } else {
-        console.error("Detail Error Supabase:", err.message || err);
+        console.error("Detail Error Supabase:", error.message || error);
     }
 }
 
