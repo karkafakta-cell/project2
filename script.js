@@ -55,7 +55,14 @@ async function cekHasilLoginDiscord() {
             const dataUser = await responUser.json();
 
             if (dataUser.id) {
-                await daftarkanViaWebOtomatis(dataUser);
+                // 1. Simpan data Discord sementara di browser
+                sessionStorage.setItem("discord_user", JSON.stringify(dataUser));
+
+                // 2. Ubah teks tombol menjadi "Lanjutkan Pendaftaran..."
+                document.getElementById("text-login-status").innerText = "Lanjutkan Pendaftaran...";
+
+                // 3. Picu fungsi bawaan webmu untuk pindah ke halaman/tab form pendaftaran
+                bukaTabPendaftaran(); // Sesuaikan dengan nama fungsi pindah tab di webmu
             }
         } catch (error) {
             console.error("Gagal verifikasi OAuth Discord:", err);
@@ -353,71 +360,91 @@ async function renderTabelRaport() {
   }
 }
 
-// ================= FUNGSI MANUAL SUBMIT FORM DATA KE SUPABASE =================
-async function kirimDataKeSupabase() {
-  let nama = document.getElementById('input_nama').value;
-  let jabatan = document.getElementById('input_jabatan').value;
-  let gender = document.getElementById('input_gender').value;
-  let bio = document.getElementById('input_bio').value;
-  let avatar = document.getElementById('input_avatar').value;
+// ================= FUNGSI MANUAL SUBMIT FORM DATA KE SUPABASE ================= 
+async function kirimDataKeSupabase() { 
+    let nama = document.getElementById('input_nama').value; 
+    let jabatan = document.getElementById('input_jabatan').value; 
+    let gender = document.getElementById('input_gender').value; 
+    let bio = document.getElementById('input_bio').value; 
+    let avatar = document.getElementById('input_avatar').value; 
 
-  if (!nama) {
-    alert("Nama wajib diisi ya!");
-    return;
-  }
+    if (!nama) { 
+        alert("Nama wajib diisi ya!"); 
+        return; 
+    } 
 
-  if (!bio || bio.trim() === "") {
-    const kumpulanBioAcak = [
-      "Pungut aku bwng😭",
-      "Lose streak mulu, tapi masih main💪",
-      "Spesialis tumbal sejati",
-      "Gendong tim sampe pinggang encok 🏋️",
-      "Mening mabar daripada overthinking😂",
-      "Fokus main drpd yapping🗣️",
-      "Tidur cuma teori, mnding push rank🖥️"
-    ];
-    bio = kumpulanBioAcak[Math.floor(Math.random() * kumpulanBioAcak.length)];
-  }
+    if (!bio || bio.trim() === "") { 
+        const kumpulanBioAcak = [ 
+            "Pungut aku bwng😭", 
+            "Lose streak mulu, tapi masih main💪", 
+            "Spesialis tumbal sejati", 
+            "Gendong tim sampe pinggang encok 🏋️", 
+            "Mening mabar daripada overthinking😂", 
+            "Fokus main drpd yapping🗣️", 
+            "Tidur cuma teori, mnding push rank🖥️" 
+        ]; 
+        bio = kumpulanBioAcak[Math.floor(Math.random() * kumpulanBioAcak.length)]; 
+    } 
 
-  let stringGame = gamesTerpilih.join(", ");
-  if (stringGame === "") {
-    stringGame = "Tidak ada game favorit";
-  }
+    let stringGame = gamesTerpilih.join(", "); 
+    if (stringGame === "") { 
+        stringGame = "Tidak ada game favorit"; 
+    } 
 
-  let roleDicentang = rolesTerpilih.join(", ");
-  if (roleDicentang === "") {
-    roleDicentang = "Flexible (All Role)";
-  }
+    let roleDicentang = rolesTerpilih.join(", "); 
+    if (roleDicentang === "") { 
+        roleDicentang = "Flexible (All Role)"; 
+    } 
 
-  let namaFinal = nama.trim();
+    let namaFinal = nama.trim(); 
 
-  const { data, error } = await supabaseClient.from('discord_squad').insert([
-    {
-      nama_member: namaFinal,
-      jabatan: jabatan,
-      gender: gender,
-      role: roleDicentang,
-      game_favorit: stringGame,
-      status_bio: bio,
-      avatar_url: avatar
-      // Catatan: Jika daftar lewat form web, discord_id bernilai null sampai mereka melakukan Login Discord link-akun
+    // === KODE BARU: AMBIL DATA DISCORD DARI MEMORI SEMENTARA BROWSER ===
+    const dataDiscordSementara = JSON.parse(sessionStorage.getItem("discord_user"));
+
+    // === KODE BARU: BUAT ALAMAT FOTO PROFIL DISCORD YANG BENAR ===
+    let fotoProfilFinal = avatar; // Default menggunakan input manual jika ada
+    if (dataDiscordSementara && dataDiscordSementara.avatar) {
+        fotoProfilFinal = `https://discordapp.com{dataDiscordSementara.id}/${dataDiscordSementara.avatar}.png`;
     }
-  ]);
 
-  if (error) {
-    alert("Gagal daftar, silakan cek konsol database!");
-    console.log(error);
-  } else {
-    alert("Berhasil bergabung ke basecamp! 🚀");
-    document.getElementById('input_nama').value = "";
-    document.getElementById('input_bio').value = "";
-    document.getElementById('input_avatar').value = "";
-    document.querySelectorAll('.tag-game.active').forEach(el => el.classList.remove('active'));
-    
-    gamesTerpilih = [];
-    rolesTerpilih = [];
-    perbaruiDaftarRole();
-    muatFotoSquad();
-    pindahTab('tab-home');
-  }
+    // === KODE BARU: RAKIT OBJEK DATA GABUNGAN FORM + DISCORD ===
+    const dataGabunganSquad = {
+        nama_member: namaFinal, // Nama panggilan game pilihan user sendiri di form
+        jabatan: jabatan,
+        gender: gender,
+        role: roleDicentang,
+        game_favorit: stringGame,
+        status_bio: bio,        // Deskripsi/Bio asli pilihan user sendiri di form
+        avatar_url: fotoProfilFinal,
+        
+        // Memasukkan data Discord ke kolom masing-masing
+        discord_id: dataDiscordSementara ? dataDiscordSementara.id : null,
+        username_discord: dataDiscordSementara ? `@${dataDiscordSementara.username}` : null
+    };
+
+    // === KODE BARU: KIRIM MENGGUNAKAN .upsert AGAR DATA TER-UPDATE JIKA USER LOGIN ULANG ===
+    const { data, error } = await supabaseClient
+        .from('discord_squad')
+        .upsert([dataGabunganSquad], { onConflict: 'discord_id' });
+
+    if (error) { 
+        alert("Gagal daftar, silakan cek konsol database!"); 
+        console.log(error); 
+    } else { 
+        alert("Berhasil bergabung ke basecamp! 🚀"); 
+        
+        // === KODE BARU: BERSIHKAN MEMORI BROWSER SETELAH SUKSES DAFTAR ===
+        sessionStorage.clear();
+
+        document.getElementById('input_nama').value = ""; 
+        document.getElementById('input_bio').value = ""; 
+        document.getElementById('input_avatar').value = ""; 
+        document.querySelectorAll('.tag-game.active').forEach(el => el.classList.remove('active')); 
+        
+        gamesTerpilih = []; 
+        rolesTerpilih = []; 
+        perbaruiDaftarRole(); 
+        muatFotoSquad(); 
+        pindahTab('tab-home'); 
+    } 
 }
