@@ -65,7 +65,7 @@ async function cekHasilLoginDiscord() {
                 bukaTabPendaftaran(); // Sesuaikan dengan nama fungsi pindah tab di webmu
             }
         } catch (error) {
-            console.error("Gagal verifikasi OAuth Discord:", err);
+            console.error("Gagal verifikasi OAuth Discord:", error);
             document.getElementById("text-login-status").innerText = "Login Gagal";
         }
     }
