@@ -406,15 +406,10 @@ async function kirimDataKeSupabase() {
     // === KODE BARU: AMBIL DATA DISCORD DARI MEMORI SEMENTARA BROWSER ===
     const dataDiscordSementara = JSON.parse(sessionStorage.getItem("discord_user"));
     
-    if (dataDiscordSementara && dataDiscordSementara.avatar) {
-    fotoProfilFinal = `https://discordapp.com/avatars/${dataDiscordSementara.id}/${dataDiscordSementara.avatar}.png`;
-    }
-
-
     // === KODE BARU: BUAT ALAMAT FOTO PROFIL DISCORD YANG BENAR ===
     let fotoProfilFinal = avatar; // Default menggunakan input manual jika ada
     if (dataDiscordSementara && dataDiscordSementara.avatar) {
-        fotoProfilFinal = `https://discordapp.com{dataDiscordSementara.id}/${dataDiscordSementara.avatar}.png`;
+    fotoProfilFinal = `https://discordapp.com/avatars/${dataDiscordSementara.id}/${dataDiscordSementara.avatar}.png`;
     }
 
     // === KODE BARU: RAKIT OBJEK DATA GABUNGAN FORM + DISCORD ===
