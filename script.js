@@ -45,29 +45,34 @@ async function cekHasilLoginDiscord() {
         document.getElementById("text-login-status").innerText = "Memverifikasi...";
 
         try {
-            // Memanggil pelayan backend kita di Vercel, bukan Discord langsung!
-            const responUser = await fetch("/api/auth-discord", { 
-                headers: { 
-                Authorization: `Bearer ${tokenAkses}` 
-            } 
-            });
-
-            const dataUser = await responUser.json();
-
-            if (dataUser.id) {
-                // 1. Simpan data Discord sementara di browser
-                sessionStorage.setItem("discord_user", JSON.stringify(dataUser));
-
-                // 2. Ubah teks tombol menjadi "Lanjutkan Pendaftaran..."
-                document.getElementById("text-login-status").innerText = "Lanjutkan Pendaftaran...";
-
-                // 3. Picu fungsi bawaan webmu untuk pindah ke halaman/tab form pendaftaran
-                bukaTabPendaftaran(); // Sesuaikan dengan nama fungsi pindah tab di webmu
-            }
-        } catch (error) {
-            console.error("Gagal verifikasi OAuth Discord:", error);
-            document.getElementById("text-login-status").innerText = "Login Gagal";
+    // Memanggil pelayan backend kita di Vercel, bukan Discord langsung!
+    const responUser = await fetch("/api/auth-discord", {
+        headers: {
+            Authorization: `Bearer ${tokenAkses}`
         }
+    });
+
+    const dataUser = await responUser.json();
+    
+    if (dataUser.id) {
+        // 1. Amankan data profil Discord di memori browser sementara
+        sessionStorage.setItem("discord_user", JSON.stringify(dataUser));
+        
+        // 2. Ubah teks status tombol login di pojok kanan atas
+        document.getElementById("text-login-status").innerText = "Lanjutkan Pendaftaran...";
+        
+        // 3. Pindahkan halaman user secara otomatis ke Form Pendaftaran berdasarkan ID HTML aslimu
+        pindahTab('tab-tambah'); // 🌟 MENGGUNAKAN 'tab-tambah' SESUAI FILE HTML-MU!
+        
+        alert(`Autentikasi Discord Berhasil! Silakan isi biodata gamemu di form untuk menyelesaikan pendaftaran.`);
+    }
+
+    } catch (error) {
+        // 🌟 MEMAKAI VARIABEL "error" AGAR TIDAK TERJADI "err is not defined" LAGI
+        console.error("Gagal verifikasi OAuth Discord:", error); 
+        document.getElementById("text-login-status").innerText = "Login Gagal";
+    }
+
     }
 }
 
