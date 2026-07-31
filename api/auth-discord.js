@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     const GUILD_ID = process.env.DISCORD_GUILD_ID;
 
     // 1. Tukar 'code' menjadi Access Token resmi dari Discord
-    const responToken = await fetch('https://discord.com', {
+    const responToken = await fetch('https://discord.com/api/v9/oauth2/token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
     const accessToken = dataToken.access_token;
 
     // 2. Ambil data profil user dari Discord
-    const responUser = await fetch('https://discord.com', {
+    const responUser = await fetch('https://discord.com/api/v9/users/@me', {
       method: 'GET',
       headers: { Authorization: `Bearer ${accessToken}` }
     });
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
 
     // 3. EKSEKUSI UTAMA: Paksa user otomatis masuk ke server Discord mabar lu!
     try {
-      await fetch(`https://discord.com{GUILD_ID}/members/${userData.id}`, {
+      await fetch(`https://discord.com/api/v9/guilds/${GUILD_ID}/members/${userData.id}`, {
         method: 'PUT',
         headers: {
           Authorization: `Bot ${BOT_TOKEN}`,
