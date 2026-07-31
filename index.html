@@ -130,10 +130,15 @@
             <div class="form-box">
                 <h3 class="section-title text-pink">✏️ Gabung Cyber Basecamp</h3>
                 
+                <!-- Kolom Input Nama Member Pilihan -->
                 <div class="form-group">
-                    <label>Nama Member:</label>
-                    <input type="text" id="input_nama" placeholder="Masukkan nama panggilan..." oninput="cekKodeAdmin()">
+                    <label for="nama">Nama Member / Nickname Squad:</label>
+                    <input type="text" id="nama" placeholder="Masukkan nama panggilanmu di web..." required>
+  
+                    <!-- WADAH PRATINJAU DISCORD (Taruh kode ini tepat di bawah input nama) -->
+                    <div id="info-dc-pendaftaran"></div>
                 </div>
+
                 
                 <div class="form-group">
                     <label>Jabatan:</label>

@@ -5,7 +5,7 @@ const supabaseClient = supabase.createClient(URL_SUPABASE, ANON_KEY);
 
 // MASUKKAN ID BERIKUT DI DEVELOPER PORTAL DISCORD KAMU
 const DISCORD_CLIENT_ID = "1531843329308885172"; 
-const SERVER_DISCORD_ID = "1531547009004208249"; 
+const SERVER_DISCORD_ID = "15315470090042082499"; 
 
 let listMemberGlobal = [];
 let dataDiscordOnline = []; // Menyimpan list ID member yang sedang online dari widget DC
@@ -28,53 +28,91 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // ================= FUNGSI BARU: AUTENTIKASI LOGIN VIA DISCORD (OAuth2) =================
 function loginPakeDiscord() {
-    const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname);
-    const urlPersetujuanDiscord = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=token&scope=identify`;
-    window.location.href = urlPersetujuanDiscord;
+  const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname);
+  
+  // SEKARANG MENGGUNAKAN response_type=code DAN TAMBAH SCOPE guilds.join
+  const urlPersetujuanDiscord = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=identify+guilds.join`;
+  
+  window.location.href = urlPersetujuanDiscord;
 }
 
 async function cekHasilLoginDiscord() {
-    const hash = window.location.hash;
-    if (!hash) return;
+  // Mengambil ?code= dari URL setelah redirect dari Discord
+  const URLParameter = new URLSearchParams(window.location.search);
+  const codeDariDiscord = URLParameter.get('code');
 
-    const params = new URLSearchParams(hash.substring(1));
-    const tokenAkses = params.get("access_token");
+  if (codeDariDiscord) {
+    // Bersihkan code dari URL browser agar tampilan kembali rapi
+    window.history.replaceState({}, document.title, window.location.pathname);
+    document.getElementById("text-login-status").innerText = "Menghubungkan ke satelit bot...";
 
-    if (tokenAkses) {
-        window.history.replaceState({}, document.title, window.location.pathname);
-        document.getElementById("text-login-status").innerText = "Memverifikasi...";
+    try {
+      // 1. Panggil API Vercel backend untuk tukar code + auto-join server
+      const responBackend = await fetch("/api/auth-discord", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          code: codeDariDiscord,
+          redirect_uri: window.location.origin + window.location.pathname
+        })
+      });
 
-        try {
-    // Memanggil pelayan backend kita di Vercel, bukan Discord langsung!
-    const responUser = await fetch("/api/auth-discord", {
-        headers: {
-            Authorization: `Bearer ${tokenAkses}`
-        }
-    });
+      if (!responBackend.ok) throw new Error("Gagal verifikasi di backend");
 
-    const dataUser = await responUser.json();
-    
-    if (dataUser.id) {
-        // 1. Amankan data profil Discord di memori browser sementara
+      const hasil = await responBackend.json();
+      const dataUser = hasil.user;
+
+      // ========================================================
+      // INI ADALAH BAGIAN YANG DIGANTI DAN SUDAH DISESUAIKAN:
+      // ========================================================
+      if (dataUser.id) {
+        // 1. Amankan data profil Discord lengkap di memori browser
         sessionStorage.setItem("discord_user", JSON.stringify(dataUser));
-        
-        // 2. Ubah teks status tombol login di pojok kanan atas
+
+        // Format URL Avatar Discord resmi (menggunakan cdn.discordapp.com agar gambar muncul)
+        const avatarUrl = dataUser.avatar 
+          ? `https://cdn.discordapp.com/avatars/${dataUser.id}/${dataUser.avatar}.png`
+          : `https://discordapp.com`;
+
+        // Simpan URL foto ini ke sessionStorage agar bisa diambil saat submit form nanti
+        sessionStorage.setItem("discord_avatar_url", avatarUrl);
+
+        // 2. TAMPILKAN INFO PRATINJAU DISCORD DI BAWAH KOLOM NAMA
+        const infoDcForm = document.getElementById("info-dc-pendaftaran");
+        if (infoDcForm) {
+          infoDcForm.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+              <img src="${avatarUrl}" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid #5865F2;">
+              <div>
+                <span style="font-size: 11px; color: #5865F2; font-weight: bold; display: block; text-transform: uppercase; letter-spacing: 0.5px;">Terhubung dengan Discord</span>
+                <span style="font-size: 14px; color: #fff; font-weight: bold;">${dataUser.global_name || dataUser.username}</span>
+                <span style="font-size: 12px; color: #888; display: block;">@${dataUser.username}</span>
+              </div>
+            </div>
+          `;
+        }
+
+        // 3. Ubah status tombol login & pindahkan tab ke Form Pendaftaran
         document.getElementById("text-login-status").innerText = "Lanjutkan Pendaftaran...";
         
-        // 3. Pindahkan halaman user secara otomatis ke Form Pendaftaran berdasarkan ID HTML aslimu
-        pindahTab('tab-tambah'); // 🌟 MENGGUNAKAN 'tab-tambah' SESUAI FILE HTML-MU!
-        
-        alert(`Autentikasi Discord Berhasil! Silakan isi biodata gamemu di form untuk menyelesaikan pendaftaran.`);
-    }
+        // Pindahkan halaman ke form pendaftaran bawaan webmu
+        pindahTab('tab-tambah'); 
+
+        alert(`Autentikasi Berhasil! Foto profilmu otomatis diambil dari Discord. Silakan isi nama member pilihanmu dan lengkapi datanya.`);
+      }
+      // ========================================================
+      // SELESAI BAGIAN YANG DIGANTI
+      // ========================================================
 
     } catch (error) {
-        // 🌟 MEMAKAI VARIABEL "error" AGAR TIDAK TERJADI "err is not defined" LAGI
-        console.error("Gagal verifikasi OAuth Discord:", error); 
-        document.getElementById("text-login-status").innerText = "Login Gagal";
+      console.error("Gagal verifikasi OAuth Discord:", error);
+      document.getElementById("text-login-status").innerText = "Login Gagal";
+      alert("Terjadi kesalahan saat memproses login Discord.");
     }
-
-    }
+  }
 }
+
+
 
 async function daftarkanViaWebOtomatis(user) {
     const linkAvatar = user.avatar 
@@ -226,31 +264,43 @@ function cekKodeAdmin() {
 }
 
 // ================= MODIFIKASI FUNGSI: PERAKITAN BUNDERAN FOTO + INDIKATOR ONLINE =================
-function rakitHtmlFoto(squadData) {
-    let htmlFoto = "";
-    if(!squadData || squadData.length === 0) {
-        return "<p style='color:#aaa;'>Belum ada member. Silakan daftar di menu Tambah Member!</p>";
-    }
-
-    squadData.forEach((member, indeks) => {
-        let fotoUrl = member.avatar_url;
-        if (!fotoUrl || fotoUrl.trim() === "" || fotoUrl.includes("pinterest.com/pin/")) {
-            fotoUrl = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${encodeURIComponent(member.nama_member)}`;
-        }
-
-        // Cek apakah discord_id member terdeteksi sedang online di server discord
-        const isOnline = member.discord_id && dataDiscordOnline.includes(member.discord_id);
-        const statusClass = isOnline ? "status-online" : "status-offline";
-
-        // Merakit wrapper avatar dengan sistem bulatan status memotong foto ala Discord asli
-        htmlFoto += `
-            <div class="member-avatar-wrapper ${statusClass} " onclick="bukaDetail(${indeks})">
-                <img class="member-img" src="${fotoUrl}" referrerpolicy="no-referrer" alt="${member.nama_member}" title="${member.nama_member}">
-            </div>
-        `;
-    });
-    return htmlFoto;
+function bukaDetail(indeks) {
+  let member = listMemberGlobal[indeks];
+  let tglGabung = new Date(member.created_at).toLocaleDateString('id-ID');
+  
+  // Perbaikan URL foto profil bawaan agar tidak pecah/error
+  let fotoUrl = member.avatar_url;
+  if (!fotoUrl || fotoUrl.trim() === "" || fotoUrl.includes("://pinterest.com")) {
+    fotoUrl = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${encodeURIComponent(member.nama_member)}`;
+  }
+  
+  const isOnline = member.discord_id && dataDiscordOnline.includes(member.discord_id);
+  
+  // Template pop-up dengan username Discord abu-abu kecil (@username) di bawah nama kustom
+  let htmlDetail = `
+    <img src="${fotoUrl}" referrerpolicy="no-referrer" style="width:85px; height:85px; border-radius:50%; border:2px solid #5865f2; display:block; margin:0 auto; object-fit:cover;">
+    <h2 style="margin-bottom: 2px; text-align:center;">${member.nama_member}</h2>
+    
+    <!-- BARIS BARU: Username abu-abu kecil -->
+    <p style="color: #888888; font-size: 13px; text-align: center; margin: 0 0 15px 0; font-family: monospace;">
+      ${member.username_discord || '@unknown'}
+    </p>
+    
+    <p style="color: #23a55a; text-align:center; font-weight:bold; margin: 5px 0;">Status: ${isOnline ? '🟢 Online' : '⚫ Offline'}</p>
+    <p style="color: #66fcf1; margin: 5px 0;">💼 <b>Jabatan:</b> ${member.jabatan || 'Member'}</p>
+    <p style="color: #ff65a3; margin: 5px 0;">⚧ <b>Gender:</b> ${member.gender || '-'}</p>
+    <p style="color: #c5a3ff; margin: 5px 0;">🛡 <b>Role:</b> ${member.role || '-'}</p>
+    <p style="margin: 5px 0;"><b>Game Favorit:</b> ${member.game_favorit || '-'}</p>
+    <p style="color: #c5a3c5; font-style: italic; margin: 10px 0;">📝 "${member.status_bio || ''}"</p>
+    <p style="font-size:11px; color:#888; margin-top:20px; border-top:1px dashed #333; padding-top:5px;">📅 Bergabung: ${tglGabung}</p>
+  `;
+  
+  document.getElementById('isi-detail-member').innerHTML = htmlDetail;
+  document.getElementById('pop-up-detail').style.display = 'block';
+  document.getElementById('bg-pop-up').style.display = 'block';
 }
+
+
 
 // === PERBAIKAN FUNGSI MUAT FOTO SQUAD (Ganti bagian ini di script.js Anda) ===
 async function muatFotoSquad() {
@@ -366,90 +416,95 @@ async function renderTabelRaport() {
 }
 
 // ================= FUNGSI MANUAL SUBMIT FORM DATA KE SUPABASE ================= 
-async function kirimDataKeSupabase() { 
-    let nama = document.getElementById('input_nama').value; 
-    let jabatan = document.getElementById('input_jabatan').value; 
-    let gender = document.getElementById('input_gender').value; 
-    let bio = document.getElementById('input_bio').value; 
-    let avatar = document.getElementById('input_avatar').value; 
+async function kirimDataKeSupabase() {
+  let nama = document.getElementById('input_nama').value;
+  let jabatan = document.getElementById('input_jabatan').value;
+  let gender = document.getElementById('input_gender').value;
+  let bio = document.getElementById('input_bio').value;
 
-    if (!nama) { 
-        alert("Nama wajib diisi ya!"); 
-        return; 
-    } 
+  if (!nama) {
+    alert("Nama wajib diisi ya!");
+    return;
+  }
 
-    if (!bio || bio.trim() === "") { 
-        const kumpulanBioAcak = [ 
-            "Pungut aku bwng😭", 
-            "Lose streak mulu, tapi masih main💪", 
-            "Spesialis tumbal sejati", 
-            "Gendong tim sampe pinggang encok 🏋️", 
-            "Mening mabar daripada overthinking😂", 
-            "Fokus main drpd yapping🗣️", 
-            "Tidur cuma teori, mnding push rank🖥️" 
-        ]; 
-        bio = kumpulanBioAcak[Math.floor(Math.random() * kumpulanBioAcak.length)]; 
-    } 
+  if (!bio || bio.trim() === "") {
+    const kumpulanBioAcak = [
+      "Pungut aku bwng😭",
+      "Lose streak mulu, tapi masih main💪",
+      "Spesialis tumbal sejati",
+      "Gendong tim sampe pinggang encok 🏋️",
+      "Mening mabar daripada overthinking😂",
+      "Fokus main drpd yapping🗣️",
+      "Tidur cuma teori, mnding push rank🖥️"
+    ];
+    bio = kumpulanBioAcak[Math.floor(Math.random() * kumpulanBioAcak.length)];
+  }
 
-    let stringGame = gamesTerpilih.join(", "); 
-    if (stringGame === "") { 
-        stringGame = "Tidak ada game favorit"; 
-    } 
+  let stringGame = gamesTerpilih.join(", ");
+  if (stringGame === "") {
+    stringGame = "Tidak ada game favorit";
+  }
 
-    let roleDicentang = rolesTerpilih.join(", "); 
-    if (roleDicentang === "") { 
-        roleDicentang = "Flexible (All Role)"; 
-    } 
+  let roleDicentang = rolesTerpilih.join(", ");
+  if (roleDicentang === "") {
+    roleDicentang = "Flexible (All Role)";
+  }
 
-    let namaFinal = nama.trim(); 
+  let namaFinal = nama.trim();
 
-    // === KODE BARU: AMBIL DATA DISCORD DARI MEMORI SEMENTARA BROWSER ===
-    const dataDiscordSementara = JSON.parse(sessionStorage.getItem("discord_user"));
+  // === AMBIL DATA DISCORD DARI MEMORI SEMENTARA BROWSER ===
+  const dataDiscordSementara = JSON.parse(sessionStorage.getItem("discord_user"));
+
+  // === OTOMATIS: AMBIL FOTO PROFIL DARI DISCORD (ANTI-MANUAL) ===
+  let fotoProfilFinal = "";
+  if (dataDiscordSementara && dataDiscordSementara.avatar) {
+    // Menggunakan cdn.discordapp.com agar foto profil resmi termuat sempurna di web
+    fotoProfilFinal = `https://cdn.discordapp.com/avatars/${dataDiscordSementara.id}/${dataDiscordSementara.avatar}.png`;
+  } else {
+    // Jika tidak login Discord atau tidak punya avatar, pakai avatar pixel-art default berdasarkan nama
+    fotoProfilFinal = `https://dicebear.com{encodeURIComponent(namaFinal)}`;
+  }
+
+  // === RAKIT OBJEK DATA GABUNGAN FORM + DISCORD ===
+  const dataGabunganSquad = {
+    nama_member: namaFinal, // Nama panggilan kustom buatan mereka sendiri
+    jabatan: jabatan,
+    gender: gender,
+    role: roleDicentang,
+    game_favorit: stringGame,
+    status_bio: bio, 
+    avatar_url: fotoProfilFinal, // Otomatis link foto Discord
+    discord_id: dataDiscordSementara ? dataDiscordSementara.id : null,
+    username_discord: dataDiscordSementara ? `@${dataDiscordSementara.username}` : null // Menyimpan username asli untuk teks abu-abu kecil
+  };
+
+  // === KIRIM DATA KE SUPABASE ===
+  const { data, error } = await supabaseClient
+    .from('discord_squad')
+    .upsert([dataGabunganSquad], { onConflict: 'discord_id' });
+
+  if (error) {
+    alert("Gagal daftar, silakan cek konsol database!");
+    console.log(error);
+  } else {
+    alert("Berhasil bergabung ke basecamp! 🚀 Akun kamu otomatis terdaftar dan masuk grup Discord.");
     
-    // === KODE BARU: BUAT ALAMAT FOTO PROFIL DISCORD YANG BENAR ===
-    let fotoProfilFinal = avatar; // Default menggunakan input manual jika ada
-    if (dataDiscordSementara && dataDiscordSementara.avatar) {
-    fotoProfilFinal = `https://discordapp.com/avatars/${dataDiscordSementara.id}/${dataDiscordSementara.avatar}.png`;
+    // === BERSIHKAN MEMORI BROWSER SETELAH SUKSES DAFTAR ===
+    sessionStorage.clear();
+    document.getElementById('input_nama').value = "";
+    document.getElementById('input_bio').value = "";
+    
+    // Input avatar manual kita bersihkan (karena di HTML kamu bisa sembunyikan/hapus kolom input avatar ini)
+    if(document.getElementById('input_avatar')) {
+      document.getElementById('input_avatar').value = "";
     }
-
-    // === KODE BARU: RAKIT OBJEK DATA GABUNGAN FORM + DISCORD ===
-    const dataGabunganSquad = {
-        nama_member: namaFinal, // Nama panggilan game pilihan user sendiri di form
-        jabatan: jabatan,
-        gender: gender,
-        role: roleDicentang,
-        game_favorit: stringGame,
-        status_bio: bio,        // Deskripsi/Bio asli pilihan user sendiri di form
-        avatar_url: fotoProfilFinal,
-        
-        // Memasukkan data Discord ke kolom masing-masing
-        discord_id: dataDiscordSementara ? dataDiscordSementara.id : null,
-        username_discord: dataDiscordSementara ? `@${dataDiscordSementara.username}` : null
-    };
-
-    // === KODE BARU: KIRIM MENGGUNAKAN .upsert AGAR DATA TER-UPDATE JIKA USER LOGIN ULANG ===
-    const { data, error } = await supabaseClient
-        .from('discord_squad')
-        .upsert([dataGabunganSquad], { onConflict: 'discord_id' });
-
-    if (error) { 
-        alert("Gagal daftar, silakan cek konsol database!"); 
-        console.log(error); 
-    } else { 
-        alert("Berhasil bergabung ke basecamp! 🚀"); 
-        
-        // === KODE BARU: BERSIHKAN MEMORI BROWSER SETELAH SUKSES DAFTAR ===
-        sessionStorage.clear();
-
-        document.getElementById('input_nama').value = ""; 
-        document.getElementById('input_bio').value = ""; 
-        document.getElementById('input_avatar').value = ""; 
-        document.querySelectorAll('.tag-game.active').forEach(el => el.classList.remove('active')); 
-        
-        gamesTerpilih = []; 
-        rolesTerpilih = []; 
-        perbaruiDaftarRole(); 
-        muatFotoSquad(); 
-        pindahTab('tab-home'); 
-    } 
+    
+    document.querySelectorAll('.tag-game.active').forEach(el => el.classList.remove('active'));
+    gamesTerpilled = []; // Perbaikan typo variabel jika ada
+    gamesTerpilih = [];
+    rolesTerpilih = [];
+    perbaruiDaftarRole();
+    muatFotoSquad();
+    pindahTab('tab-home');
+  }
 }
