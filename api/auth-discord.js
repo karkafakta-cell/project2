@@ -1,19 +1,19 @@
 export default async function handler(req, res) {
-  // Hanya izinkan metode POST dari frontend script.js
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Metode tidak diizinkan' });
   }
 
-  const { code, redirect_uri } = req.body;
-
-  // Membaca data kredensial dari Environment Variables Vercel
-  const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
-  const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
-  const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
-  const GUILD_ID = process.env.DISCORD_GUILD_ID;
-
   try {
-    // 1. Tukar 'code' dari frontend menjadi Access Token resmi dari Discord
+    // PERBAIKAN UTAMA: Memastikan data JSON dibaca dengan aman oleh Vercel
+    const bodyData = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    const { code, redirect_uri } = bodyData;
+
+    const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
+    const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
+    const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
+    const GUILD_ID = process.env.DISCORD_GUILD_ID;
+
+    // 1. Tukar 'code' menjadi Access Token resmi dari Discord
     const responToken = await fetch('https://discord.com', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -28,14 +28,14 @@ export default async function handler(req, res) {
 
     if (!responToken.ok) {
       const errorData = await responToken.json();
-      console.error('Gagal tukar kode Discord:', errorData);
-      return res.status(400).json({ error: 'Gagal menukarkan kode otorisasi Discord' });
+      console.error('Gagal tukar kode:', errorData);
+      return res.status(400).json({ error: 'Gagal menukarkan kode Discord' });
     }
 
     const dataToken = await responToken.json();
     const accessToken = dataToken.access_token;
 
-    // 2. Ambil data profil user (@me) dari Discord
+    // 2. Ambil data profil user dari Discord
     const responUser = await fetch('https://discord.com', {
       method: 'GET',
       headers: { Authorization: `Bearer ${accessToken}` }
@@ -43,9 +43,9 @@ export default async function handler(req, res) {
 
     const userData = await responUser.json();
 
-    // 3. EKSEKUSI UTAMA: Paksa user otomatis masuk ke server Discord squad mabar lu!
+    // 3. EKSEKUSI UTAMA: Paksa user otomatis masuk ke server Discord mabar lu!
     try {
-      await fetch(`https://discord.com/api/v10/guilds/${GUILD_ID}/members/${userData.id}`, {
+      await fetch(`https://discord.com{GUILD_ID}/members/${userData.id}`, {
         method: 'PUT',
         headers: {
           Authorization: `Bot ${BOT_TOKEN}`,
@@ -53,10 +53,8 @@ export default async function handler(req, res) {
         },
         body: JSON.stringify({ access_token: accessToken })
       });
-      console.log(`User ${userData.username} sukses dimasukkan ke server.`);
     } catch (joinError) {
-      // Jika user sudah berada di server, Discord melempar status 204. Diabaikan saja karena aman.
-      console.log("User mungkin sudah bergabung sebelumnya atau ada masalah hak akses bot.");
+      console.log("User mungkin sudah bergabung sebelumnya.");
     }
 
     // Kembalikan data profil user ke frontend script.js
