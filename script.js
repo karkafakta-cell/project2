@@ -259,7 +259,7 @@ function cekKodeAdmin() {
     if (namaInput.toLowerCase().includes('owner')) {
         if(opsiAdmin) opsiAdmin.style.display = 'block';
         if(selectJabatan) selectJabatan.value = "Ketua Squad / Admin";
-        document.getElementById('input_nama').value = namaInput.replace(/owner/gi, '').trim();
+        document.getElementById('nama').value = namaInput.replace(/owner/gi, '').trim();
     }
 }
 
