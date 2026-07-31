@@ -448,7 +448,8 @@ async function renderTabelRaport() {
 
 // ================= FUNGSI MANUAL SUBMIT FORM DATA KE SUPABASE ================= 
 async function kirimDataKeSupabase() {
-  let nama = document.getElementById('input_nama').value;
+  // PERBAIKAN: Memperbaiki referensi ID 'input_nama' menjadi 'nama' agar sesuai HTML
+  let nama = document.getElementById('nama').value;
   let jabatan = document.getElementById('input_jabatan').value;
   let gender = document.getElementById('input_gender').value;
   let bio = document.getElementById('input_bio').value;
@@ -457,6 +458,7 @@ async function kirimDataKeSupabase() {
     alert("Nama wajib diisi ya!");
     return;
   }
+  // ... rest of the logic, combining form data, processing avatar, and uploading to Supabase
 
   if (!bio || bio.trim() === "") {
     const kumpulanBioAcak = [
