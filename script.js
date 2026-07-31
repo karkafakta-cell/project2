@@ -252,7 +252,7 @@ function toggleTag(elemen, namaGame) {
 }
 
 function cekKodeAdmin() {
-    let namaInput = document.getElementById('input_nama').value;
+    let namaInput = document.getElementById('nama').value;
     let opsiAdmin = document.getElementById('opsi-admin');
     let selectJabatan = document.getElementById('input_jabatan');
 
