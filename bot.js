@@ -32,7 +32,7 @@ client.on('guildMemberAdd', async (member) => {
     console.log(`👾 Ada member baru join server DC: ${member.user.username}`);
 
     const avatarUrl = member.user.displayAvatarURL({ extension: 'png', size: 256 }) 
-        || `https://dicebear.com{encodeURIComponent(member.user.username)}`;
+        || `https://api.dicebear.com/7.x/pixel-art/svg?seed=${encodeURIComponent(member.user.username)}`;
 
     const kumpulanBioAcak = [
         "Join basecamp otomatis lewat jalur Discord 🎮",
