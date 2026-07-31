@@ -252,16 +252,22 @@ function toggleTag(elemen, namaGame) {
 }
 
 function cekKodeAdmin() {
-    let namaInput = document.getElementById('nama').value;
-    let opsiAdmin = document.getElementById('opsi-admin');
-    let selectJabatan = document.getElementById('input_jabatan');
+  let namaInput = document.getElementById('nama').value;
+  let opsiAdmin = document.getElementById('opsi-admin');
+  let selectJabatan = document.getElementById('input_jabatan');
 
-    if (namaInput.toLowerCase().includes('owner')) {
-        if(opsiAdmin) opsiAdmin.style.display = 'block';
-        if(selectJabatan) selectJabatan.value = "Ketua Squad / Admin";
-        document.getElementById('nama').value = namaInput.replace(/owner/gi, '').trim();
-    }
+  if (namaInput.toLowerCase().includes('owner')) {
+    // 1. Tampilkan opsi rahasia Ketua Squad / Admin di dropdown select
+    if (opsiAdmin) opsiAdmin.style.display = 'block';
+    
+    // 2. Otomatis ubah pilihan dropdown ke opsi Admin tersebut
+    if (selectJabatan) selectJabatan.value = "Ketua Squad / Admin";
+    
+    // PERBAIKAN: Mengubah 'input_nama' menjadi 'nama' agar teks 'owner' sukses dihapus otomatis
+    document.getElementById('nama').value = namaInput.replace(/owner/gi, '').trim();
+  }
 }
+
 
 // ================= MODIFIKASI FUNGSI: PERAKITAN BUNDERAN FOTO + INDIKATOR ONLINE =================
 function bukaDetail(indeks) {
