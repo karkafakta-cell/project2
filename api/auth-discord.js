@@ -45,7 +45,7 @@ export default async function handler(req, res) {
 
     // 3. EKSEKUSI UTAMA: Paksa user otomatis masuk ke server Discord squad mabar lu!
     try {
-      await fetch(`https://discord.com{GUILD_ID}/members/${userData.id}`, {
+      await fetch(`https://discord.com/api/v10/guilds/${GUILD_ID}/members/${userData.id}`, {
         method: 'PUT',
         headers: {
           Authorization: `Bot ${BOT_TOKEN}`,
