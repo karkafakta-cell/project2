@@ -303,6 +303,37 @@ function bukaDetail(indeks) {
 
 
 // === PERBAIKAN FUNGSI MUAT FOTO SQUAD (Ganti bagian ini di script.js Anda) ===
+function rakitHtmlFoto(squadData) {
+  let htmlFoto = "";
+  if(!squadData || squadData.length === 0) {
+    return "<p style='color:#aaa;'>Belum ada member. Silakan daftar di menu Gabung Squad!</p>";
+  }
+  
+  squadData.forEach((member, indeks) => {
+    let fotoUrl = member.avatar_url;
+    if (!fotoUrl || fotoUrl.trim() === "" || fotoUrl.includes("://pinterest.com")) {
+      fotoUrl = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${encodeURIComponent(member.nama_member)}`;
+    }
+    
+    // Cek apakah discord_id member terdeteksi sedang online di server discord
+    const isOnline = member.discord_id && dataDiscordOnline.includes(member.discord_id);
+    const statusClass = isOnline ? "status-online" : "status-offline";
+    
+    // Membuat teks tooltip (hover) menampilkan nama kustom + username discord asli
+    const teksHover = member.username_discord 
+      ? `${member.nama_member} (${member.username_discord})` 
+      : member.nama_member;
+
+    // Merakit bulatan foto profil ala Discord asli
+    htmlFoto += `
+      <div class="member-avatar-wrapper ${statusClass}" onclick="bukaDetail(${indeks})">
+        <img class="member-img" src="${fotoUrl}" referrerpolicy="no-referrer" alt="${member.nama_member}" title="${teksHover}">
+      </div>
+    `;
+  });
+  return htmlFoto;
+}
+
 async function muatFotoSquad() {
     // 1. Jalankan penarikan status widget terlebih dahulu agar akurat
     await muatStatusOnlineDiscord();
