@@ -61,11 +61,20 @@ async function cekHasilLoginDiscord() {
 
       const hasil = await responBackend.json();
       const dataUser = hasil.user;
+        
 
       // ========================================================
       // INI ADALAH BAGIAN YANG DIGANTI DAN SUDAH DISESUAIKAN:
       // ========================================================
       if (dataUser.id) {
+        // ... (Bagian awal fungsi tetap sama)
+        const inputNama = document.getElementById("nama");
+        if (inputNama) {
+        inputNama.value = dataUser.global_name || dataUser.username;
+        cekKodeAdmin(); // 🌟 KUNCI: Panggil cekKodeAdmin
+      }
+// ... (Sisa fungsi tetap sama)
+
         // 1. Amankan data profil Discord lengkap di memori browser
         sessionStorage.setItem("discord_user", JSON.stringify(dataUser));
 
@@ -250,7 +259,7 @@ function toggleTag(elemen, namaGame) {
     }
     perbaruiDaftarRole();
 }
-
+cekKodeAdmin();
 function cekKodeAdmin() {
   let namaInput = document.getElementById('nama').value;
   let opsiAdmin = document.getElementById('opsi-admin');
